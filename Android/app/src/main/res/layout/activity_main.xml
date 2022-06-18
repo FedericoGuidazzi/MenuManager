@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/backgroundlogin"
+    android:orientation="vertical"
+    android:gravity="center"
     tools:context=".MainActivity">
 
     <TextView
@@ -63,24 +64,18 @@
         android:layout_margin="25dp"
         />
 
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/forgotPassword"
-        android:text="Forgot password?"
-        android:layout_below="@id/loginButton"
-        android:layout_marginBottom="10dp"
-        android:textColor="@color/white"
-        android:textSize="20dp"
-        android:layout_centerHorizontal="true"
-        />
+        android:gravity="center"
+        android:layout_marginHorizontal="10dp"
+        >
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/register"
         android:text="You don't have an account?"
-        android:layout_below="@id/forgotPassword"
         android:layout_margin="15dp"
         android:textColor="@color/white"
         android:layout_centerHorizontal="true"
@@ -93,10 +88,11 @@
         android:id="@+id/RegisterButton"
         android:background="#20ffffff"
         android:textColor="@color/white"
+        android:layout_margin="5dp"
+        android:textSize="11dp"
         android:text="Register Now"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/register"
-        android:layout_margin="25dp"
         />
+    </LinearLayout>
 
-</RelativeLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>
