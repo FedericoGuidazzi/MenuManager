@@ -2,6 +2,7 @@ package com.example.android;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
         TextView password =(TextView) findViewById(R.id.password);
 
         MaterialButton loginButton =(MaterialButton) findViewById(R.id.loginButton);
+        MaterialButton registerButton = (MaterialButton) findViewById(R.id.RegisterButton);
         //click su login
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -33,5 +35,18 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openRegistration();
+            }
+        });
+
+
+    }
+    public void openRegistration(){
+        Intent intent = new Intent(this, RegisterActivity.class);
+        startActivity(intent);
     }
 }
