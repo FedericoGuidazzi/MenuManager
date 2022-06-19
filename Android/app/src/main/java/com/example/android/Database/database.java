@@ -12,9 +12,9 @@ import com.example.android.User;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {User.class}, version = 1,exportSchema = false)
+@Database(entities = {User.class}, version = 1)
 
-public abstract class database extends RoomDatabase implements Database {
+public abstract class database extends RoomDatabase {
     public abstract UserDAO userDAO();
 
     ///Singleton instance to retrieve when the db is needed

@@ -51,7 +51,7 @@ public class RegisterActivity extends AppCompatActivity {
                         Toast.makeText(RegisterActivity.this, "Username is already taken", Toast.LENGTH_SHORT).show();
                     } else {
                         insertNewUser(username.getText().toString(), password.getText().toString());
-                        //visualizzare la pagina principale
+                        showHomepage();
 
                     }
                 }
@@ -67,6 +67,11 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void showHomepage(){
+        Intent intent = new Intent(this, HomepageActivity.class);
+        startActivity(intent);
     }
 
     public void goBackToLogin(){
