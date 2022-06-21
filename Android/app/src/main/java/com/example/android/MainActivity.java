@@ -1,81 +1,53 @@
 package com.example.android;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.android.Database.userRepository;
-import com.google.android.material.button.MaterialButton;
+import com.example.android.databinding.ActivityMainBinding;
 
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private userRepository userRepository;
+    ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        replaceFragment(new homeFragment());
 
-        TextView username =(TextView) findViewById(R.id.username);
-        TextView password =(TextView) findViewById(R.id.password);
+        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
 
-        MaterialButton loginButton =(MaterialButton) findViewById(R.id.loginButton);
-        MaterialButton registerButton = (MaterialButton) findViewById(R.id.RegisterButton);
-
-        userRepository = new userRepository(this.getApplication());
-
-        //click su login
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //check sulle credenziali
-                isUser(username.getText().toString(), password.getText().toString());
-
+            switch (item.getItemId()){
+                case R.id.home:
+                    replaceFragment(new homeFragment());
+                    break;
+                case R.id.profile:
+                    replaceFragment(new profileFragment());
+                    break;
+                case R.id.social:
+                    replaceFragment(new socialFragment());
+                    break;
+                case R.id.recipes:
+                    replaceFragment(new recipesFragment());
+                    break;
             }
 
+            return true;
         });
-
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openRegistration();
-            }
-        });
-
-
-    }
-    public void openRegistration(){
-        Intent intent = new Intent(this, RegisterActivity.class);
-        startActivity(intent);
     }
 
-    public void openHomepage(){
-        Intent intent = new Intent(this, HomepageActivity.class);
-        startActivity(intent);
-    }
+    private void replaceFragment(Fragment fragment){
 
-    public void isUser(String username, String password){
-        LiveData<List<User>> userList = userRepository.getUser();
-        final boolean[] check = {false};
-        userList.observe(this, new Observer<List<User>>() {
-            @Override
-            public void onChanged(List<User> users) {
-                for(User user : users){
-                    if(user.username.equals(username) && user.password.equals(password)) {
-                        openHomepage();
-                        return;
-                    }
-                }
-                Toast.makeText(MainActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
-            }
-        });
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame, fragment);
+        fragmentTransaction.commit();
+
     }
 }

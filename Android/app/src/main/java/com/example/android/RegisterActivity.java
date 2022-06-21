@@ -70,12 +70,12 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void showHomepage(){
-        Intent intent = new Intent(this, HomepageActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
     public void goBackToLogin(){
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 
