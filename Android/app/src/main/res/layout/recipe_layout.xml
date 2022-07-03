@@ -20,7 +20,7 @@
         android:layout_margin="15dp">
 
         <ImageView
-            android:id="@+id/place_imageview"
+            android:id="@+id/recipe_image"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:background="@color/purple_500"
@@ -28,7 +28,7 @@
             tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
         <TextView
-            android:id="@+id/place_nameview"
+            android:id="@+id/recipe_title"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="3dp"

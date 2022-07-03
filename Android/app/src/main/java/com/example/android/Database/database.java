@@ -7,12 +7,13 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 
+import com.example.android.Recipe;
 import com.example.android.User;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {User.class}, version = 1)
+@Database(entities = {User.class, Recipe.class}, version = 1)
 
 public abstract class database extends RoomDatabase {
     public abstract UserDAO userDAO();

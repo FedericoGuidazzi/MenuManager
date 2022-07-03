@@ -23,4 +23,44 @@ public class Recipe {
 
     @ColumnInfo(name="author")
     public int author;
+
+    @ColumnInfo(name="photo")
+    public String photo;
+
+    public Recipe(String title, String description, String ingredients, int numberSaved, int author, String photo) {
+        this.title = title;
+        this.description = description;
+        this.ingredients = ingredients;
+        this.numberSaved = numberSaved;
+        this.author = author;
+        this.photo = photo;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getIngredients() {
+        return ingredients;
+    }
+
+    public int getNumberSaved() {
+        return numberSaved;
+    }
+
+    public int getAuthor() {
+        return author;
+    }
+
+    public String getPhoto(){
+        return photo;
+    }
 }
