@@ -16,6 +16,7 @@ import java.util.concurrent.Executors;
 
 public abstract class database extends RoomDatabase {
     public abstract UserDAO userDAO();
+    public abstract RecipeDAO recipeDAO();
 
     ///Singleton instance to retrieve when the db is needed
     private static volatile database INSTANCE;
