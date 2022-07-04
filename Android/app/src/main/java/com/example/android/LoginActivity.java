@@ -18,6 +18,7 @@ import java.util.List;
 public class LoginActivity extends AppCompatActivity {
 
     private userRepository userRepository;
+    private int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void openHomepage(){
+        ((GlobalClass) this.getApplication()).setUserId(userId);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
@@ -70,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onChanged(List<User> users) {
                 for(User user : users){
                     if(user.username.equals(username) && user.password.equals(password)) {
+                        userId = user.id;
                         openHomepage();
                         return;
                     }
