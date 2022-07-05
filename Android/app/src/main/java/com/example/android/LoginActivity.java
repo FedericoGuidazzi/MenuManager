@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //check sulle credenziali
+                //check on the credentials
                 isUser(username.getText().toString(), password.getText().toString());
 
             }
