@@ -21,4 +21,7 @@ public interface UserDAO {
     @Query("UPDATE User set score= score+ :score where id=:userid")
     void updateUserScore(int score, int userid);
 
+    @Query("Update User set profileImage =:image where id=:userid")
+    void updateProfileImage(String image, int userid);
+
 }

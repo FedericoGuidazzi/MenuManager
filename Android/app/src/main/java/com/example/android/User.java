@@ -17,4 +17,7 @@ public class User {
 
     @ColumnInfo(name="score")
     public int score;
+
+    @ColumnInfo(name="profileImage")
+    public String profileImage;
 }

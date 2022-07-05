@@ -40,4 +40,13 @@ public class userRepository {
             }
         });
     }
+
+    public void updateProfileImage(String image, int userid){
+        database.executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                userDAO.updateProfileImage(image, userid);
+            }
+        });
+    }
 }
