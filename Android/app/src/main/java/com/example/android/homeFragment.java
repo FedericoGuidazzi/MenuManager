@@ -2,11 +2,17 @@ package com.example.android;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CalendarView;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -15,6 +21,10 @@ import android.view.ViewGroup;
  */
 public class homeFragment extends Fragment {
 
+    CalendarView calendarView;
+    EditText breakfast;
+    EditText lunch;
+    EditText dinner;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -59,6 +69,20 @@ public class homeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        breakfast = view.findViewById(R.id.breakfast);
+        lunch = view.findViewById(R.id.lunch);
+        dinner = view.findViewById(R.id.dinner);
+        calendarView =(CalendarView) view.findViewById(R.id.calendar);
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+                String date =  year + "/" + month + "/" + dayOfMonth;
+                breakfast.setText(date);
+                lunch.setText(date);
+                dinner.setText(date);
+            }
+        });
+        return view;
     }
 }
