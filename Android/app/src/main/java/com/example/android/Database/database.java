@@ -7,17 +7,19 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 
+import com.example.android.Calendar;
 import com.example.android.Recipe;
 import com.example.android.User;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {User.class, Recipe.class}, version = 1)
+@Database(entities = {User.class, Recipe.class, Calendar.class}, version = 1)
 
 public abstract class database extends RoomDatabase {
     public abstract UserDAO userDAO();
     public abstract RecipeDAO recipeDAO();
+    public abstract CalendarDAO calendarDAO();
 
     ///Singleton instance to retrieve when the db is needed
     private static volatile database INSTANCE;
