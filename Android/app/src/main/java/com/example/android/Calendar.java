@@ -11,9 +11,10 @@ public class Calendar {
 
     @PrimaryKey(autoGenerate = true)
     public int id;
-    
+
+    //format for the date is YYYYMMDD
     @ColumnInfo(name="date")
-    public Date date;
+    public String date;
 
     @ColumnInfo(name="breakfast")
     public String breakfast;

@@ -14,10 +14,10 @@ public class CalendarRepository{
 
     private final LiveData<List<Calendar>> calendarEventList;
 
-    public CalendarRepository(Application application, int userId){
+    public CalendarRepository(Application application, int userId, String date){
         database db = database.getDatabase(application);
         calendarDAO = db.calendarDAO();
-        calendarEventList = calendarDAO.getCalendarEvent(userId);
+        calendarEventList = calendarDAO.getCalendarEvent(userId, date);
     }
 
 
@@ -31,7 +31,7 @@ public class CalendarRepository{
     }
 
 
-    public void updateCalendarEvent(Date date, String breakfast, String lunch, String dinner, int userid) {
+    public void updateCalendarEvent(String date, String breakfast, String lunch, String dinner, int userid) {
         database.executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -41,7 +41,7 @@ public class CalendarRepository{
     }
 
 
-    public LiveData<List<Calendar>> getCalendarEvent(int userid) {
+    public LiveData<List<Calendar>> getCalendarEvent() {
         return calendarEventList;
     }
 }

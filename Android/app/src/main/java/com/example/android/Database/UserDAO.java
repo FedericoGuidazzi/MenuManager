@@ -18,4 +18,7 @@ public interface UserDAO {
     @Query("SELECT * From User")
     LiveData<List<User>> getUser();
 
+    @Query("UPDATE User set score= score+ :score where id=:userid")
+    void updateUserScore(int score, int userid);
+
 }

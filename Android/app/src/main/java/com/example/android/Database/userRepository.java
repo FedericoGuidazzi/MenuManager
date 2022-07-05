@@ -31,4 +31,13 @@ public class userRepository {
             }
         });
     }
+
+    public void updateUserScore(int score, int userid){
+        database.executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                userDAO.updateUserScore(score, userid);
+            }
+        });
+    }
 }
