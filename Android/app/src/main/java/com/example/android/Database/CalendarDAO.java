@@ -18,7 +18,7 @@ public interface CalendarDAO {
     void updateCalendarEvent(String date, String breakfast, String lunch, String dinner, int userid);
 
     @Query("SELECT * from Calendar where user=:userid and date=:date")
-    LiveData<List<Calendar>> getCalendarEvent(int userid, String date);
+    LiveData<Calendar> getCalendarEvent(int userid, String date);
 
 
 }

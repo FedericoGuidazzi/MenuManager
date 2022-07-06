@@ -12,7 +12,7 @@ public class Calendar {
     @PrimaryKey(autoGenerate = true)
     public int id;
 
-    //format for the date is YYYYMMDD
+    //format for the date is YYYY/MM/DD
     @ColumnInfo(name="date")
     public String date;
 

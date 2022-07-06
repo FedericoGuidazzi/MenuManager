@@ -12,12 +12,10 @@ import java.util.List;
 public class CalendarRepository{
     private final CalendarDAO calendarDAO;
 
-    private final LiveData<List<Calendar>> calendarEventList;
 
-    public CalendarRepository(Application application, int userId, String date){
+    public CalendarRepository(Application application){
         database db = database.getDatabase(application);
         calendarDAO = db.calendarDAO();
-        calendarEventList = calendarDAO.getCalendarEvent(userId, date);
     }
 
 
@@ -41,7 +39,7 @@ public class CalendarRepository{
     }
 
 
-    public LiveData<List<Calendar>> getCalendarEvent() {
-        return calendarEventList;
+    public LiveData<Calendar> getCalendarEvent(int userId, String date) {
+        return calendarDAO.getCalendarEvent(userId, date);
     }
 }
