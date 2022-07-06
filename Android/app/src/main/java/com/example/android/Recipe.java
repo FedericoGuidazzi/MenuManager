@@ -27,13 +27,17 @@ public class Recipe {
     @ColumnInfo(name="photo")
     public String photo;
 
-    public Recipe(String title, String description, String ingredients, int numberSaved, int author, String photo) {
+    @ColumnInfo(name="guidelines")
+    public String guidelines;
+
+    public Recipe(String title, String description, String ingredients, int numberSaved, int author, String photo, String guidelines) {
         this.title = title;
         this.description = description;
         this.ingredients = ingredients;
         this.numberSaved = numberSaved;
         this.author = author;
         this.photo = photo;
+        this.guidelines = guidelines;
     }
 
     public int getId() {
@@ -63,4 +67,6 @@ public class Recipe {
     public String getPhoto(){
         return photo;
     }
+
+    public String getGuidelines(){ return guidelines;}
 }

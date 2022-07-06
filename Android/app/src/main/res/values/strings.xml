@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">Android</string>
     <string name="titolo">titolo</string>
+    <string name="add_new_recipe">Add new Recipe</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="recipe_title">Recipe title:</string>
+    <string name="recipe_description">Recipe description:</string>
+    <string name="recipe_ingredients">Recipe ingredients:</string>
+    <string name="recipe_guidelines">Recipe guidelines:</string>
+    <string name="recipe_image">Recipe image</string>
+    <string name="upload_photo">Upload Photo</string>
+    <string name="save">Save</string>
 </resources>

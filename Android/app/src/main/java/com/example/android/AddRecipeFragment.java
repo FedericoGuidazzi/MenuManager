@@ -8,16 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link recipesFragment#newInstance} factory method to
+ * Use the {@link AddRecipeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class recipesFragment extends Fragment {
+public class AddRecipeFragment extends Fragment {
 
-    FloatingActionButton floatingActionButton;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -27,7 +24,7 @@ public class recipesFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public recipesFragment() {
+    public AddRecipeFragment() {
         // Required empty public constructor
     }
 
@@ -37,11 +34,11 @@ public class recipesFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment recipesFragment.
+     * @return A new instance of fragment AddRecipeFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static recipesFragment newInstance(String param1, String param2) {
-        recipesFragment fragment = new recipesFragment();
+    public static AddRecipeFragment newInstance(String param1, String param2) {
+        AddRecipeFragment fragment = new AddRecipeFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -62,14 +59,6 @@ public class recipesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_recipes, container, false);
-        floatingActionButton = view.findViewById(R.id.fab_add);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((MainActivity)getActivity()).replaceFragment(new AddRecipeFragment());
-            }
-        });
-        return view;
+        return inflater.inflate(R.layout.fragment_add_recipe, container, false);
     }
 }
