@@ -40,6 +40,7 @@ public class homeFragment extends Fragment {
     MaterialButton save;
     String currentDate = "not set";
     int saved;
+    int firstTime=1;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -166,9 +167,6 @@ public class homeFragment extends Fragment {
                                 calendarRepository.updateCalendarEvent(currentDate, breakfast.getText().toString(), lunch.getText().toString(), dinner.getText().toString(), ((GlobalClass) getActivity().getApplication()).getUserId());
                                 Toast.makeText(getActivity(), "You have insert data correctly", Toast.LENGTH_SHORT).show();
                             }
-                            breakfast.setText(breakfast.getText().toString());
-                            lunch.setText(lunch.getText().toString());
-                            dinner.setText(dinner.getText().toString());
                         }
                     }
                 });

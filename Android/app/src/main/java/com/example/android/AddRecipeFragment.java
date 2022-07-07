@@ -7,6 +7,10 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.android.material.button.MaterialButton;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -15,6 +19,13 @@ import android.view.ViewGroup;
  */
 public class AddRecipeFragment extends Fragment {
 
+    MaterialButton uploadPhoto;
+    MaterialButton takePicture;
+    MaterialButton save;
+    EditText title;
+    EditText description;
+    EditText ingredients;
+    EditText guidelines;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -59,6 +70,27 @@ public class AddRecipeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_recipe, container, false);
+        View view = inflater.inflate(R.layout.fragment_add_recipe, container, false);
+        uploadPhoto = view.findViewById(R.id.upload_photo);
+        takePicture = view.findViewById(R.id.take_photo);
+        save = view.findViewById(R.id.save_recipe);
+        title = view.findViewById(R.id.recipe_title_text);
+        description = view.findViewById(R.id.recipe_description_text);
+        ingredients = view.findViewById(R.id.recipe_ingredients_text);
+        guidelines = view.findViewById(R.id.recipe_guidelines_text);
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!(title.getText().toString().equals("") || title.getText().toString().equals("Title") ||
+                        description.getText().toString().equals("") || description.getText().toString().equals("Description") ||
+                        ingredients.getText().toString().equals("") || ingredients.getText().toString().equals("Ingredients") ||
+                        guidelines.getText().toString().equals("") || guidelines.getText().toString().equals("Guidelines"))){
+                    //inserire la ricetta controllando se lo user ha inserito la foto o no
+                } else {
+                    Toast.makeText(getActivity(), "You need to fill all the fields", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        return view;
     }
 }

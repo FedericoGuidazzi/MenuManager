@@ -28,7 +28,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:hint="@string/recipe_title"
+                    android:hint="@string/title"
                     android:textSize="20dp"
                     android:id="@+id/recipe_title_text"/>
             </LinearLayout>
@@ -49,7 +49,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:hint="@string/recipe_description"
+                    android:hint="@string/description"
                     android:textSize="20dp"
                     android:id="@+id/recipe_description_text"/>
             </LinearLayout>
@@ -70,7 +70,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:hint="@string/recipe_ingredients"
+                    android:hint="@string/ingredients"
                     android:textSize="20dp"
                     android:id="@+id/recipe_ingredients_text"/>
             </LinearLayout>
@@ -91,7 +91,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:hint="@string/recipe_guidelines"
+                    android:hint="@string/guidelines"
                     android:textSize="20dp"
                     android:id="@+id/recipe_guidelines_text"/>
             </LinearLayout>
@@ -112,6 +112,12 @@
                     android:layout_height="wrap_content"
                     android:text="@string/upload_photo"
                     android:id="@+id/upload_photo"
+                    android:layout_margin="10dp"/>
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/take_picture"
+                    android:id="@+id/take_photo"
                     android:layout_margin="10dp"/>
             </LinearLayout>
             <LinearLayout
