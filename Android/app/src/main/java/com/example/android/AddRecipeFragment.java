@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.android.Database.RecipeRepository;
 import com.google.android.material.button.MaterialButton;
 
 /**
@@ -26,6 +27,7 @@ public class AddRecipeFragment extends Fragment {
     EditText description;
     EditText ingredients;
     EditText guidelines;
+    RecipeRepository recipeRepository;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -60,6 +62,7 @@ public class AddRecipeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        recipeRepository = new RecipeRepository(getActivity().getApplication());
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
