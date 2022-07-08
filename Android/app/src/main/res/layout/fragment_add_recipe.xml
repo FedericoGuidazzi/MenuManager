@@ -96,11 +96,20 @@
                     android:id="@+id/recipe_guidelines_text"/>
             </LinearLayout>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Recipe Image"
+                android:textSize="25dp"
+                android:layout_margin="10dp"
+                android:textColor="@color/black"
+                android:gravity="center"/>
+
            <ImageView
                android:layout_width="match_parent"
-               android:layout_height="wrap_content"
+               android:layout_height="100dp"
                android:contentDescription="@string/recipe_image"
-               android:src="@drawable/ic_baseline_list_alt_24"
+               android:src="@drawable/ic_baseline_fastfood_24"
                android:id="@+id/recipe_image_imageView"
                android:layout_margin="10dp"/>
             <LinearLayout
