@@ -18,9 +18,6 @@ public class Recipe {
     @ColumnInfo(name="ingredients")
     public String ingredients;
 
-    @ColumnInfo(name="numberSaved")
-    public int numberSaved;
-
     @ColumnInfo(name="author")
     public int author;
 
@@ -30,11 +27,10 @@ public class Recipe {
     @ColumnInfo(name="guidelines")
     public String guidelines;
 
-    public Recipe(String title, String description, String ingredients, int numberSaved, int author, String photo, String guidelines) {
+    public Recipe(String title, String description, String ingredients, int author, String photo, String guidelines) {
         this.title = title;
         this.description = description;
         this.ingredients = ingredients;
-        this.numberSaved = numberSaved;
         this.author = author;
         this.photo = photo;
         this.guidelines = guidelines;
@@ -54,10 +50,6 @@ public class Recipe {
 
     public String getIngredients() {
         return ingredients;
-    }
-
-    public int getNumberSaved() {
-        return numberSaved;
     }
 
     public int getAuthor() {
