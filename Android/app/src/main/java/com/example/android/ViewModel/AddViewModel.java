@@ -2,6 +2,7 @@ package com.example.android.ViewModel;
 
 import android.app.Application;
 import android.graphics.Bitmap;
+import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -14,6 +15,8 @@ import com.example.android.Recipe;
 public class AddViewModel extends AndroidViewModel {
 
     private final MutableLiveData<Bitmap> imageBitmap = new MutableLiveData<>();
+
+    private final MutableLiveData<Uri> imageUri = new MutableLiveData<>();
 
     private final RecipeRepository repository;
 
@@ -30,5 +33,13 @@ public class AddViewModel extends AndroidViewModel {
         return imageBitmap;
     }
 
+    public void setImageUri(Uri uri) {
+        imageUri.setValue(uri);
+    }
+
+    public MutableLiveData<Uri> getImageUri(){ return imageUri;}
+
     public void insertRecipe(Recipe recipe){ repository.addRecipe(recipe); }
+
+
 }

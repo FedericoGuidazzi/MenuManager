@@ -1,10 +1,19 @@
 package com.example.android;
 
+import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +23,15 @@ import android.widget.Toast;
 
 import com.example.android.Database.RecipeRepository;
 import com.example.android.Database.userRepository;
+import com.example.android.ViewModel.AddViewModel;
 import com.google.android.material.button.MaterialButton;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,6 +51,9 @@ public class AddRecipeFragment extends Fragment {
     RecipeRepository recipeRepository;
     userRepository userRepository;
     ImageView recipeImageView;
+    public final static int RESULT_LOAD_IMAGE = 2;
+    public final static int REQUEST_IMAGE_CAPTURE = 3;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -93,20 +113,40 @@ public class AddRecipeFragment extends Fragment {
        uploadPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //code to change the image with the one select from the user
-                //recipeImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_add_24, getActivity().getApplicationContext().getTheme()));
-
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                getActivity().startActivityForResult(intent, RESULT_LOAD_IMAGE);
             }
         });
 
         takePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //code to change the image with the one select from the user
-                //recipeImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_add_24, getActivity().getApplicationContext().getTheme()));
-
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if(intent.resolveActivity(getActivity().getPackageManager()) != null){
+                    getActivity().startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+                }
             }
         });
+
+        AddViewModel addViewModel = new ViewModelProvider((ViewModelStoreOwner) getActivity()).get(AddViewModel.class);
+
+        addViewModel.getImageBitmap().observe(getViewLifecycleOwner(), new Observer<Bitmap>() {
+            //code to visualize image if is taken
+            @Override
+            public void onChanged(Bitmap bitmap) {
+                recipeImageView.setImageBitmap(bitmap);
+            }
+        });
+
+        addViewModel.getImageUri().observe(getViewLifecycleOwner(), new Observer<Uri>() {
+            //code to visualize image if is uploaded
+            @Override
+            public void onChanged(Uri uri) {
+                recipeImageView.setImageURI(uri);
+            }
+        });
+
+
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,9 +158,19 @@ public class AddRecipeFragment extends Fragment {
                     String recipeDescription = description.getText().toString();
                     String recipeIngredients = ingredients.getText().toString();
                     String recipreGuidelines = guidelines.getText().toString();
-                    //se photo inserita photo = inserita se no uguale a default
-                    if(false){
-                        recipeImage = "";//location dell'immagine
+
+                    Bitmap bitmap = addViewModel.getImageBitmap().getValue();
+                    Uri uri = addViewModel.getImageUri().getValue();
+
+
+                    if(bitmap != null){
+                        try {
+                            recipeImage = String.valueOf(saveImage(bitmap, getActivity()));
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    } else if(uri != null){
+                        recipeImage = String.valueOf(uri);
                     } else {
                         recipeImage = Uri.parse("android.resource://"+R.class.getPackage().getName()+"/" +"ic_baseline_fastfood_24.xml").toString();
                     }
@@ -137,5 +187,32 @@ public class AddRecipeFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    private Uri saveImage(Bitmap bitmap, Activity activity) throws FileNotFoundException {
+        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ITALY)
+                .format(new Date());
+        String name = "JPEG_" + timestamp + ".jpg";
+
+        ContentResolver contentResolver = activity.getContentResolver();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, name);
+        contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg");
+
+        Uri imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                contentValues);
+
+
+        OutputStream outputStream = contentResolver.openOutputStream(imageUri);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+
+        try {
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return imageUri;
+
     }
 }
