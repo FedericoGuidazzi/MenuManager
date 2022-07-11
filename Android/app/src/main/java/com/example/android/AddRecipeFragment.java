@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,7 +114,7 @@ public class AddRecipeFragment extends Fragment {
        uploadPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 getActivity().startActivityForResult(intent, RESULT_LOAD_IMAGE);
             }
         });
@@ -142,11 +143,11 @@ public class AddRecipeFragment extends Fragment {
             //code to visualize image if is uploaded
             @Override
             public void onChanged(Uri uri) {
+                Log.e("percorso android", ""+uri);
+                Toast.makeText(getActivity(), ""+uri, Toast.LENGTH_SHORT).show();
                 recipeImageView.setImageURI(uri);
             }
         });
-
-
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

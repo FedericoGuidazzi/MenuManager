@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,42 +37,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeviewHolder> implem
     public RecipeAdapter(OnItemListener listener, Activity activity){
         this.activity = activity;
         this.listener = listener;
-    }
-
-
-    @Override
-    public Filter getFilter() {
-        return cardFilter;
-    }
-
-    @NonNull
-    @Override
-    public RecipeviewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_layout, parent, false);
-        return new RecipeviewHolder(layoutView, listener );
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull RecipeviewHolder holder, int position) {
-        Recipe currentRecipeItem = recipeList.get(position);
-        String imagePath = currentRecipeItem.getPhoto();
-        if (imagePath.contains("ic_")){
-            Drawable drawable = AppCompatResources.getDrawable(activity, activity.getResources()
-                    .getIdentifier(imagePath, "drawable", activity.getPackageName()));
-            holder.recipeImageImageView.setImageDrawable(drawable);
-        } else {
-            Bitmap bitmap = Utilities.getImageBitmap(activity, Uri.parse(imagePath));
-            if (bitmap != null){
-                holder.recipeImageImageView.setImageBitmap(bitmap);
-            }
-        }
-
-        holder.recipeNameTextView.setText(currentRecipeItem.getTitle());
-    }
-
-    @Override
-    public int getItemCount() {
-        return recipeList.size();
     }
 
     private final Filter cardFilter = new Filter() {
@@ -109,6 +74,45 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeviewHolder> implem
             updateCardListItems(filteredList);
         }
     };
+
+    @Override
+    public Filter getFilter() {
+        return cardFilter;
+    }
+
+    @NonNull
+    @Override
+    public RecipeviewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_layout, parent, false);
+        return new RecipeviewHolder(layoutView, listener );
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecipeviewHolder holder, int position) {
+        Recipe currentRecipeItem = recipeList.get(position);
+        String imagePath = currentRecipeItem.getPhoto();
+        if (imagePath.contains("ic_")){
+            Drawable drawable = AppCompatResources.getDrawable(activity.getApplicationContext(), R.drawable.ic_baseline_fastfood_24);
+            holder.recipeImageImageView.setImageDrawable(drawable);
+        } else {
+            Log.e("imagepath", ""+imagePath);
+
+            Bitmap bitmap = Utilities.getImageBitmap(activity, Uri.parse(imagePath));
+            if (bitmap != null){
+                //holder.recipeImageImageView.setImageURI(Uri.parse(imagePath));
+                holder.recipeImageImageView.setImageBitmap(bitmap);
+            }
+        }
+
+        holder.recipeNameTextView.setText(currentRecipeItem.getTitle());
+    }
+
+    @Override
+    public int getItemCount() {
+        return recipeList.size();
+    }
+
+
 
     public void updateCardListItems(List<Recipe> filteredList) {
         final RecipeDiffCallback diffCallback =

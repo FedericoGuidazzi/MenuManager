@@ -1,23 +1,37 @@
 package com.example.android;
 
+import android.app.Activity;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.example.android.RecycleView.OnItemListener;
+import com.example.android.RecycleView.RecipeAdapter;
+import com.example.android.ViewModel.ListViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link recipesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class recipesFragment extends Fragment {
+public class recipesFragment extends Fragment implements OnItemListener {
 
     FloatingActionButton floatingActionButton;
+    private RecipeAdapter adapter;
+    ListViewModel listViewModel;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -71,5 +85,38 @@ public class recipesFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    private void setRecyclerView(Activity activity){
+        RecyclerView recyclerView = activity.findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        final OnItemListener listener = this;
+        adapter = new RecipeAdapter(listener, activity);
+        adapter.getFilter().filter(String.valueOf(((GlobalClass) getActivity().getApplication()).getUserId()));
+        recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if(getActivity() != null){
+            setRecyclerView(getActivity());
+            listViewModel = new ViewModelProvider(getActivity()).get(ListViewModel.class);
+            listViewModel.getRecipeItems().observe(getActivity(), new Observer<List<Recipe>>() {
+                @Override
+                public void onChanged(List<Recipe> recipe) {
+                    adapter.setData(recipe);
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        Activity activity = getActivity();
+        if (activity != null){
+            ((MainActivity)getActivity()).replaceFragment(new AddRecipeFragment());
+            listViewModel.setItemSelected(adapter.getItemSelected(position));
+        }
     }
 }
