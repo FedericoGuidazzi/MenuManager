@@ -7,6 +7,11 @@
         android:icon="@drawable/ic_baseline_home_24"
         />
     <item
+        android:title="Shopping List"
+        android:id="@+id/shoppingList"
+        android:icon="@drawable/ic_baseline_shopping_bag_24"
+        />
+    <item
         android:title="Recipes"
         android:id="@+id/recipes"
         android:icon="@drawable/ic_baseline_list_alt_24"

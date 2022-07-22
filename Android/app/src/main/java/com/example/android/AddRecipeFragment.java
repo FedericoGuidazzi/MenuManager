@@ -143,8 +143,6 @@ public class AddRecipeFragment extends Fragment {
             //code to visualize image if is uploaded
             @Override
             public void onChanged(Uri uri) {
-                Log.e("percorso android", ""+uri);
-                Toast.makeText(getActivity(), ""+uri, Toast.LENGTH_SHORT).show();
                 recipeImageView.setImageURI(uri);
             }
         });

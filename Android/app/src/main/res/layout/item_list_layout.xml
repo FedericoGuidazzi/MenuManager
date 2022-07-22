@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/recipe_card"
+    android:layout_margin="16dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="@dimen/cardview_default_radius"
+    app:strokeWidth="5dp"
+    android:orientation="horizontal"
+    app:strokeColor="@color/material_on_surface_stroke"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="15dp"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/item_list_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ciao"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_weight="1"
+            android:gravity="left|center_vertical"/>
+
+        <TextView
+            android:id="@+id/quantity_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="quantity"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_weight="1"
+            android:gravity="right|center_vertical"/>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
