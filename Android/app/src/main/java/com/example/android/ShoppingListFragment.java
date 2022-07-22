@@ -3,17 +3,22 @@ package com.example.android;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.android.Database.ShoppingListRepository;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,6 +38,7 @@ public class ShoppingListFragment extends Fragment {
     private FloatingActionButton floatingActionButton;
     private ArrayList<ItemShoppingList> itemList;
     private RecyclerView recyclerView;
+    private ShoppingListRepository repository;
 
     public ShoppingListFragment() {
         // Required empty public constructor
@@ -64,6 +70,7 @@ public class ShoppingListFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         itemList = new ArrayList<>();
+        repository = new ShoppingListRepository(getActivity().getApplication());
     }
 
     @Override
@@ -74,7 +81,6 @@ public class ShoppingListFragment extends Fragment {
         floatingActionButton = view.findViewById(R.id.fab_add);
         recyclerView = view.findViewById(R.id.recycler_view_shopping);
         setItemList();
-        setAdapter();
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,14 +90,23 @@ public class ShoppingListFragment extends Fragment {
         return view;
     }
 
-    private void setAdapter(){
+    private void setItemList(){
+        /*LiveData<List<ItemShoppingList>> list = repository.getUserItemShoppingList(((GlobalClass)getActivity().getApplication()).getUserId());
+        list.observe(getViewLifecycleOwner(), new Observer<List<ItemShoppingList>>() {
+            @Override
+            public void onChanged(List<ItemShoppingList> itemShoppingLists) {
+                itemList = new ArrayList<>();
+                for(ItemShoppingList item : itemShoppingLists){
+                    itemList.add(item);
+                }
+            }
+        });*/
+        //itemList.add(new ItemShoppingList("forchetta", 2, ((GlobalClass)getActivity().getApplication()).getUserId()));
+        itemList = new ArrayList<>(repository.getUserItemShoppingList(((GlobalClass)getActivity().getApplication()).getUserId()));
         RecyclerAdapter recyclerAdapter = new RecyclerAdapter(itemList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(recyclerAdapter);
-    }
-    private void setItemList(){
-        itemList.add(new ItemShoppingList("forchetta", 2));
-    }
+        }
 }
