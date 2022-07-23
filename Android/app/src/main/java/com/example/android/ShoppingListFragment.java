@@ -40,7 +40,6 @@ public class ShoppingListFragment extends Fragment {
     private ArrayList<ItemShoppingList> itemList;
     private RecyclerView recyclerView;
     private ShoppingListRepository repository;
-    private ImageButton removeButton;
 
     public ShoppingListFragment() {
         // Required empty public constructor
@@ -93,19 +92,8 @@ public class ShoppingListFragment extends Fragment {
     }
 
     private void setItemList(){
-        /*LiveData<List<ItemShoppingList>> list = repository.getUserItemShoppingList(((GlobalClass)getActivity().getApplication()).getUserId());
-        list.observe(getViewLifecycleOwner(), new Observer<List<ItemShoppingList>>() {
-            @Override
-            public void onChanged(List<ItemShoppingList> itemShoppingLists) {
-                itemList = new ArrayList<>();
-                for(ItemShoppingList item : itemShoppingLists){
-                    itemList.add(item);
-                }
-            }
-        });*/
-        //itemList.add(new ItemShoppingList("forchetta", 2, ((GlobalClass)getActivity().getApplication()).getUserId()));
         itemList = new ArrayList<>(repository.getUserItemShoppingList(((GlobalClass)getActivity().getApplication()).getUserId()));
-        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(itemList);
+        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(itemList, this);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());

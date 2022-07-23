@@ -29,4 +29,16 @@ public class ShoppingListRepository {
     public List<ItemShoppingList> getUserItemShoppingList(int userId){
         return shoppingListDAO.getUserItemShoppingList(userId);
     }
+
+    public ItemShoppingList getItem(int id){
+        return shoppingListDAO.getItem(id);
+    }
+
+    public void removeItem(int id){
+        shoppingListDAO.deleteItem(id);
+    }
+
+    public void updateItem(String name, int quantity, int id){
+        shoppingListDAO.updateItem(name, quantity, id);
+    }
 }

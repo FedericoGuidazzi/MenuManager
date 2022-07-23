@@ -48,4 +48,9 @@ public class ItemShoppingList {
     public void setUserId(int userId) {
         this.userId = userId;
     }
+
+    public int getId() {
+        return id;
+    }
+
 }
