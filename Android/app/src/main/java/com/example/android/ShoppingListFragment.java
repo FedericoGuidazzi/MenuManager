@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import com.example.android.Database.ShoppingListRepository;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -39,6 +40,7 @@ public class ShoppingListFragment extends Fragment {
     private ArrayList<ItemShoppingList> itemList;
     private RecyclerView recyclerView;
     private ShoppingListRepository repository;
+    private ImageButton removeButton;
 
     public ShoppingListFragment() {
         // Required empty public constructor

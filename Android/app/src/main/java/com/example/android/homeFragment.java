@@ -39,8 +39,6 @@ public class homeFragment extends Fragment {
     CalendarRepository calendarRepository;
     MaterialButton save;
     String currentDate = "not set";
-    int saved;
-    int firstTime=1;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -95,21 +93,17 @@ public class homeFragment extends Fragment {
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
         currentDate = formatter.format(date);
-        LiveData<Calendar> event = calendarRepository.getCalendarEvent(((GlobalClass)getActivity().getApplication()).getUserId(), currentDate);
-        event.observe(getViewLifecycleOwner(), new Observer<Calendar>() {
-            @Override
-            public void onChanged(Calendar calendar) {
-                if(calendar != null){
-                    breakfast.setText(calendar.breakfast);
-                    lunch.setText(calendar.lunch);
-                    dinner.setText(calendar.dinner);
-                } else {
-                    breakfast.setText("Breakfast");
-                    lunch.setText("Lunch");
-                    dinner.setText("Dinner");
-                }
-            }
-        });
+        Calendar event = calendarRepository.getCalendarEvent(((GlobalClass)getActivity().getApplication()).getUserId(), currentDate);
+
+        if(event != null){
+            breakfast.setText(event.breakfast);
+            lunch.setText(event.lunch);
+            dinner.setText(event.dinner);
+        } else {
+            breakfast.setText("Breakfast");
+            lunch.setText("Lunch");
+            dinner.setText("Dinner");
+        }
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
@@ -124,52 +118,36 @@ public class homeFragment extends Fragment {
                 }
                 String date =  year + "/" + monthModified + "/" + dayOfMonthModified;
                 currentDate = date;
-                LiveData<Calendar> event = calendarRepository.getCalendarEvent(((GlobalClass)getActivity().getApplication()).getUserId(), date);
-                event.observe(getViewLifecycleOwner(), new Observer<Calendar>() {
-                    @Override
-                    public void onChanged(Calendar calendar) {
-                        if(calendar != null){
-                            breakfast.setText(calendar.breakfast);
-                            lunch.setText(calendar.lunch);
-                            dinner.setText(calendar.dinner);
-                        } else {
-                            breakfast.setText("Breakfast");
-                            lunch.setText("Lunch");
-                            dinner.setText("Dinner");
-                        }
-                    }
-                });
+                Calendar event = calendarRepository.getCalendarEvent(((GlobalClass)getActivity().getApplication()).getUserId(), date);
+
+                if(event != null){
+                    breakfast.setText(event.breakfast);
+                    lunch.setText(event.lunch);
+                    dinner.setText(event.dinner);
+                } else {
+                    breakfast.setText("Breakfast");
+                    lunch.setText("Lunch");
+                    dinner.setText("Dinner");
+                }
             }
         });
-
         save = view.findViewById(R.id.button_save);
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saved = 0;
-                LiveData<Calendar> event = calendarRepository.getCalendarEvent(((GlobalClass)getActivity().getApplication()).getUserId(), currentDate);
-                event.observe(getViewLifecycleOwner(), new Observer<Calendar>() {
-                    @Override
-                    public void onChanged(Calendar calendar) {
-                        if(saved == 0) {
-                            if (calendar == null) {
-                                saved = 1;
-                                Calendar calendar1 = new Calendar();
-                                calendar1.breakfast = breakfast.getText().toString();
-                                calendar1.lunch = lunch.getText().toString();
-                                calendar1.dinner = dinner.getText().toString();
-                                calendar1.date = currentDate;
-                                calendar1.user = ((GlobalClass) getActivity().getApplication()).getUserId();
-                                calendarRepository.insertCalendarEvent(calendar1);
-                                Toast.makeText(getActivity(), "You have insert data correctly", Toast.LENGTH_SHORT).show();
-                            } else {
-                                saved = 1;
-                                calendarRepository.updateCalendarEvent(currentDate, breakfast.getText().toString(), lunch.getText().toString(), dinner.getText().toString(), ((GlobalClass) getActivity().getApplication()).getUserId());
-                                Toast.makeText(getActivity(), "You have insert data correctly", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }
-                });
+                Calendar event = calendarRepository.getCalendarEvent(((GlobalClass) getActivity().getApplication()).getUserId(), currentDate);
+                if (event == null) {
+                    Calendar calendar1 = new Calendar();
+                    calendar1.breakfast = breakfast.getText().toString();
+                    calendar1.lunch = lunch.getText().toString();
+                    calendar1.dinner = dinner.getText().toString();
+                    calendar1.date = currentDate;
+                    calendar1.user = ((GlobalClass) getActivity().getApplication()).getUserId();
+                    calendarRepository.insertCalendarEvent(calendar1);
+                } else {
+                    calendarRepository.updateCalendarEvent(currentDate, breakfast.getText().toString(), lunch.getText().toString(), dinner.getText().toString(), ((GlobalClass) getActivity().getApplication()).getUserId());
+                }
+                Toast.makeText(getActivity(), "You have insert data correctly", Toast.LENGTH_SHORT).show();
             }
         });
         return view;

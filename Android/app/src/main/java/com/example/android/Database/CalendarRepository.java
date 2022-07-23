@@ -39,7 +39,7 @@ public class CalendarRepository{
     }
 
 
-    public LiveData<Calendar> getCalendarEvent(int userId, String date) {
+    public Calendar getCalendarEvent(int userId, String date) {
         return calendarDAO.getCalendarEvent(userId, date);
     }
 }
