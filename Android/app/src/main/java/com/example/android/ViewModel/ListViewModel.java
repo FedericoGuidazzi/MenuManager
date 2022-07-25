@@ -15,7 +15,7 @@ import java.util.List;
 public class ListViewModel extends AndroidViewModel {
     private final MutableLiveData<Recipe> itemSelected = new MutableLiveData<>();
 
-    public LiveData<List<Recipe>> recipes;
+    public List<Recipe> recipes;
 
     public ListViewModel(@NonNull Application application) {
         super(application);
@@ -23,7 +23,7 @@ public class ListViewModel extends AndroidViewModel {
         recipes = repository.getRecipes();
     }
 
-    public LiveData<List<Recipe>> getRecipeItems() {
+    public List<Recipe> getRecipeItems() {
         return recipes;
     }
 

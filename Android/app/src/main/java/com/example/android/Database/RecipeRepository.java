@@ -11,7 +11,7 @@ import java.util.List;
 public class RecipeRepository {
     private final RecipeDAO recipeDAO;
 
-    private final LiveData<List<Recipe>> recipeList;
+    private final List<Recipe> recipeList;
 
     public RecipeRepository(Application application){
         database db = database.getDatabase(application);
@@ -19,7 +19,7 @@ public class RecipeRepository {
         recipeList = recipeDAO.getRecipes();
     }
 
-    public LiveData<List<Recipe>> getRecipes(){
+    public List<Recipe> getRecipes(){
         return recipeList;
     }
 
