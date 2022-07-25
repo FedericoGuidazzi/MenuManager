@@ -10,132 +10,91 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.android.FavoriteRecipes;
+import com.example.android.ItemShoppingList;
+import com.example.android.MainActivity;
 import com.example.android.R;
 import com.example.android.Recipe;
+import com.example.android.UpdateItemShoppingList;
 import com.example.android.Utilities;
+import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class RecipeAdapter extends RecyclerView.Adapter<RecipeviewHolder> implements Filterable {
+public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHolder>{
 
-    private List<Recipe> recipeList = new ArrayList<>();
+    private ArrayList<FavoriteRecipes> itemList;
+    private Fragment fragment;
 
-    private final Activity activity;
-
-    private final OnItemListener listener;
-
-    private List<Recipe> recipeListNotFiltered = new ArrayList<>();
-
-    public RecipeAdapter(OnItemListener listener, Activity activity){
-        this.activity = activity;
-        this.listener = listener;
+    public RecipeAdapter(ArrayList<FavoriteRecipes> list, Fragment fragment){
+        this.itemList = list;
+        this.fragment = fragment;
     }
 
-    private final Filter cardFilter = new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence charSequence) {
-            List<Recipe> filteredList = new ArrayList<>();
+    public class MyViewHolder extends RecyclerView.ViewHolder{
+        private TextView recipeName;
+        private TextView recipeId;
+        private ImageView imageView;
+        private MaterialCardView cardView;
 
-            if(charSequence == null || charSequence.length()==0){
-                filteredList.addAll(recipeListNotFiltered);
-            }else{
-                String filterPattern = charSequence.toString().toLowerCase(Locale.ROOT).trim();
-                for(Recipe recipe : recipeListNotFiltered){
-                    if(recipe.getTitle().toLowerCase().contains(filterPattern)){
-                        filteredList.add(recipe);
-                    }
+        public MyViewHolder(final View view){
+            super(view);
+            cardView = view.findViewById(R.id.recipe_card);
+            recipeName = view.findViewById(R.id.recipe_title);
+            recipeId = view.findViewById(R.id.id_text_view);
+            imageView = view.findViewById(R.id.recipe_image);
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.e("id", "onClick: "+recipeId.getText().toString() );
+                    //((MainActivity)fragment.getActivity()).replaceFragment(new UpdateItemShoppingList(itemId.getText().toString()));
                 }
-            }
+            });
 
-            FilterResults results = new FilterResults();
-            results.values = filteredList;
-            return results;
         }
-
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            List<Recipe> filteredList = new ArrayList<>();
-            List<?> result = (List<?>) results.values;
-            for (Object object : result) {
-                if (object instanceof Recipe) {
-                    filteredList.add((Recipe) object);
-                }
-            }
-
-            //warn the adapter that the data are changed after the filtering
-            updateCardListItems(filteredList);
-        }
-    };
-
-    @Override
-    public Filter getFilter() {
-        return cardFilter;
     }
 
     @NonNull
     @Override
-    public RecipeviewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_layout, parent, false);
-        return new RecipeviewHolder(layoutView, listener );
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_layout, parent, false);
+        return new RecipeAdapter.MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecipeviewHolder holder, int position) {
-        Recipe currentRecipeItem = recipeList.get(position);
-        String imagePath = currentRecipeItem.getPhoto();
-        if (imagePath.contains("ic_")){
-            Drawable drawable = AppCompatResources.getDrawable(activity.getApplicationContext(), R.drawable.ic_baseline_fastfood_24);
-            holder.recipeImageImageView.setImageDrawable(drawable);
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        String name = itemList.get(position).getTitle();
+        int id = itemList.get(position).getId();
+        String photo = itemList.get(position).getPhoto();
+        holder.recipeName.setText(name);
+        holder.recipeId.setText(""+id);
+        holder.imageView.setImageURI(Uri.parse(photo));
+        if (photo.contains("ic_")){
+            Drawable drawable = AppCompatResources.getDrawable(fragment.getActivity().getApplicationContext(), R.drawable.ic_baseline_fastfood_24);
+            holder.imageView.setImageDrawable(drawable);
         } else {
-            Log.e("imagepath", ""+imagePath);
-
-            Bitmap bitmap = Utilities.getImageBitmap(activity, Uri.parse(imagePath));
+            Bitmap bitmap = Utilities.getImageBitmap(fragment.getActivity(), Uri.parse(photo));
             if (bitmap != null){
                 //holder.recipeImageImageView.setImageURI(Uri.parse(imagePath));
-                holder.recipeImageImageView.setImageBitmap(bitmap);
+                holder.imageView.setImageBitmap(bitmap);
             }
         }
 
-        holder.recipeNameTextView.setText(currentRecipeItem.getTitle());
     }
 
     @Override
     public int getItemCount() {
-        return recipeList.size();
-    }
-
-
-
-    public void updateCardListItems(List<Recipe> filteredList) {
-        final RecipeDiffCallback diffCallback =
-                new RecipeDiffCallback(this.recipeList, filteredList);
-        final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
-
-        this.recipeList = new ArrayList<>(filteredList);
-        diffResult.dispatchUpdatesTo(this);
-    }
-
-
-    public void setData(List<Recipe> list){
-        final RecipeDiffCallback diffCallback =
-                new RecipeDiffCallback(this.recipeList, list);
-        final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
-
-        this.recipeList = new ArrayList<>(list);
-        this.recipeListNotFiltered = new ArrayList<>(list);
-
-        diffResult.dispatchUpdatesTo(this);
-    }
-
-    public Recipe getItemSelected(int position) {
-        return recipeList.get(position);
+        return itemList.size();
     }
 }

@@ -31,4 +31,8 @@ public class RecipeRepository {
             }
         });
     }
+
+    public int newId(){
+        return recipeDAO.newId();
+    }
 }

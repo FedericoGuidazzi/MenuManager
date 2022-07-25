@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.android.Database.FavoriteRecipesRepository;
 import com.example.android.Database.RecipeRepository;
 import com.example.android.Database.userRepository;
 import com.example.android.ViewModel.AddViewModel;
@@ -50,6 +51,7 @@ public class AddRecipeFragment extends Fragment {
     EditText guidelines;
     String recipeImage;
     RecipeRepository recipeRepository;
+    FavoriteRecipesRepository favoriteRecipesRepository;
     userRepository userRepository;
     ImageView recipeImageView;
     public final static int RESULT_LOAD_IMAGE = 2;
@@ -90,6 +92,7 @@ public class AddRecipeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         recipeRepository = new RecipeRepository(getActivity().getApplication());
+        favoriteRecipesRepository = new FavoriteRecipesRepository(getActivity().getApplication());
         userRepository = new userRepository(getActivity().getApplication());
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -176,6 +179,12 @@ public class AddRecipeFragment extends Fragment {
                     Recipe recipe = new Recipe(recipeTitle, recipeDescription, recipeIngredients,
                             ((GlobalClass)getActivity().getApplication()).getUserId(), recipeImage, recipreGuidelines);
                     recipeRepository.addRecipe(recipe);
+                    int id = recipeRepository.newId();
+                    FavoriteRecipes favoriteRecipes = new FavoriteRecipes(recipeTitle, recipeDescription, recipeIngredients,
+                            ((GlobalClass)getActivity().getApplication()).getUserId(), recipeImage, recipreGuidelines
+                            ,id ,((GlobalClass)getActivity().getApplication()).getUserId());
+                    favoriteRecipesRepository.insertFavoriteRecipe(favoriteRecipes);
+
                     //add points to the recipe author
                     userRepository.updateUserScore(100, ((GlobalClass)getActivity().getApplication()).getUserId());
                     Toast.makeText(getActivity(), "Your recipe has been added successfully", Toast.LENGTH_SHORT).show();

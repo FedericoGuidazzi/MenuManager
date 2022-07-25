@@ -35,6 +35,10 @@
             android:text="@string/titolo"
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.Material3.TitleMedium" />
+        <TextView
+            android:id="@+id/id_text_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"/>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </com.google.android.material.card.MaterialCardView>

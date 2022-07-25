@@ -8,6 +8,7 @@ import androidx.room.RoomDatabase;
 
 
 import com.example.android.Calendar;
+import com.example.android.FavoriteRecipes;
 import com.example.android.ItemShoppingList;
 import com.example.android.Recipe;
 import com.example.android.User;
@@ -15,13 +16,14 @@ import com.example.android.User;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {User.class, Recipe.class, Calendar.class, ItemShoppingList.class}, version = 1)
+@Database(entities = {User.class, Recipe.class, Calendar.class, ItemShoppingList.class, FavoriteRecipes.class}, version = 1)
 
 public abstract class database extends RoomDatabase {
     public abstract UserDAO userDAO();
     public abstract RecipeDAO recipeDAO();
     public abstract CalendarDAO calendarDAO();
     public abstract ShoppingListDAO shoppingListDAO();
+    public abstract FavoriteRecipesDAO favoriteRecipesDAO();
 
     ///Singleton instance to retrieve when the db is needed
     private static volatile database INSTANCE;

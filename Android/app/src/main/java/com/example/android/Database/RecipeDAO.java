@@ -19,4 +19,7 @@ public interface RecipeDAO {
 
     @Query("SELECT * FROM Recipe")
     LiveData<List<Recipe>> getRecipes();
+
+    @Query("Select id from Recipe order by id desc limit 1")
+    int newId();
 }

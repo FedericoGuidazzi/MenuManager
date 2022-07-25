@@ -8,6 +8,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -15,11 +17,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.android.Database.FavoriteRecipesRepository;
+import com.example.android.Database.RecipeRepository;
 import com.example.android.RecycleView.OnItemListener;
 import com.example.android.RecycleView.RecipeAdapter;
+import com.example.android.RecycleView.RecyclerAdapter;
 import com.example.android.ViewModel.ListViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,12 +33,12 @@ import java.util.List;
  * Use the {@link recipesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class recipesFragment extends Fragment implements OnItemListener {
+public class recipesFragment extends Fragment {
 
     FloatingActionButton floatingActionButton;
-    private RecipeAdapter adapter;
-    ListViewModel listViewModel;
-    Fragment fragment;
+    private ArrayList<FavoriteRecipes> recipeList;
+    private RecyclerView recyclerView;
+    private FavoriteRecipesRepository recipeRepository;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -72,6 +78,8 @@ public class recipesFragment extends Fragment implements OnItemListener {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        recipeList = new ArrayList<>();
+        recipeRepository = new FavoriteRecipesRepository(getActivity().getApplication());
     }
 
     @Override
@@ -80,6 +88,8 @@ public class recipesFragment extends Fragment implements OnItemListener {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_recipes, container, false);
         floatingActionButton = view.findViewById(R.id.fab_add);
+        recyclerView = view.findViewById(R.id.recycler_view);
+        setRecipes();
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,36 +99,13 @@ public class recipesFragment extends Fragment implements OnItemListener {
         return view;
     }
 
-    private void setRecyclerView(Activity activity){
-        RecyclerView recyclerView = activity.findViewById(R.id.recycler_view);
-        recyclerView.setHasFixedSize(true);
-        final OnItemListener listener = this;
-        adapter = new RecipeAdapter(listener, activity);
-        adapter.getFilter().filter(String.valueOf(((GlobalClass) getActivity().getApplication()).getUserId()));
-        recyclerView.setAdapter(adapter);
-    }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        if(getActivity() != null){
-            setRecyclerView(getActivity());
-            listViewModel = new ViewModelProvider(getActivity()).get(ListViewModel.class);
-            listViewModel.getRecipeItems().observe(getActivity(), new Observer<List<Recipe>>() {
-                @Override
-                public void onChanged(List<Recipe> recipe) {
-                    adapter.setData(recipe);
-                }
-            });
-        }
-    }
-
-    @Override
-    public void onItemClick(int position) {
-        Activity activity = getActivity();
-        if (activity != null){
-            ((MainActivity)getActivity()).replaceFragment(new AddRecipeFragment());
-            listViewModel.setItemSelected(adapter.getItemSelected(position));
-        }
+    private void setRecipes(){
+        recipeList = new ArrayList<>(recipeRepository.getFavoriteRecipes(((GlobalClass)getActivity().getApplication()).getUserId()));
+        RecipeAdapter recyclerAdapter = new RecipeAdapter(recipeList, this);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(recyclerAdapter);
     }
 }
