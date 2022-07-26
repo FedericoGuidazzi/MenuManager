@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.android.Database.FavoriteRecipesRepository;
+import com.example.android.Database.RecipeRepository;
 import com.example.android.RecycleView.RecipeAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 

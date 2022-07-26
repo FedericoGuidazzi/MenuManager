@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.FavoriteRecipes;
+import com.example.android.InnerRecipeFragment;
 import com.example.android.ItemShoppingList;
 import com.example.android.MainActivity;
 import com.example.android.R;
@@ -57,8 +58,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.e("id", "onClick: "+recipeId.getText().toString() );
-                    //((MainActivity)fragment.getActivity()).replaceFragment(new UpdateItemShoppingList(itemId.getText().toString()));
+                    ((MainActivity)fragment.getActivity()).replaceFragment(new InnerRecipeFragment(Integer.parseInt(recipeId.getText().toString())));
                 }
             });
 

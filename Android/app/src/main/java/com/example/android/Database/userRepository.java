@@ -49,4 +49,8 @@ public class userRepository {
             }
         });
     }
+
+    public String getUsername(int userId){
+        return userDAO.getUsername(userId);
+    }
 }

@@ -2,6 +2,7 @@ package com.example.android;
 
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,6 +26,7 @@ public class socialFragment extends Fragment {
     private ArrayList<Recipe> recipeList;
     private RecyclerView recyclerView;
     private RecipeRepository recipeRepository;
+    private CardView cardView;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";

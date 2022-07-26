@@ -16,4 +16,10 @@ public interface FavoriteRecipesDAO {
 
     @Query("Select * from FavoriteRecipes where userId =:userId")
     List<FavoriteRecipes> getFavoriteRecipes(int userId);
+
+    @Query("Select * from FavoriteRecipes where userId =:userId and recipeId =:recipeId")
+    FavoriteRecipes getFavoriteRecipe(int userId, int recipeId);
+
+    @Query("Delete from FavoriteRecipes where userId =:userId and recipeId =:recipeId")
+    void removeFavoriteRecipe(int userId, int recipeId);
 }

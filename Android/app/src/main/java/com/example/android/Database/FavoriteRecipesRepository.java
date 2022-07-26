@@ -26,4 +26,17 @@ public class FavoriteRecipesRepository {
             }
         });
     }
+
+    public FavoriteRecipes getRecipe(int userId, int recipeId){
+        return favoriteRecipesDAO.getFavoriteRecipe(userId, recipeId);
+    }
+
+    public void removeFavoriteRecipe(int userId, int recipeId){
+        database.executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                favoriteRecipesDAO.removeFavoriteRecipe(userId, recipeId);
+            }
+        });
+    }
 }

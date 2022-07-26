@@ -22,4 +22,7 @@ public interface RecipeDAO {
 
     @Query("Select id from Recipe order by id desc limit 1")
     int newId();
+
+    @Query("Select * from Recipe where id =:recipeId")
+    Recipe getRecipe(int recipeId);
 }

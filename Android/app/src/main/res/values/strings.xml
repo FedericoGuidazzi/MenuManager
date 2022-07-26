@@ -16,4 +16,7 @@
     <string name="description">Description</string>
     <string name="ingredients">Ingredients</string>
     <string name="guidelines">Guidelines</string>
+    <string name="guidelines_text">Guidelines</string>
+    <string name="ingredients_text">Ingredients</string>
+    <string name="description_text">Description</string>
 </resources>

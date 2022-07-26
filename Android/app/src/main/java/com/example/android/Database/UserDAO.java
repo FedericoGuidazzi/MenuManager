@@ -24,4 +24,7 @@ public interface UserDAO {
     @Query("Update User set profileImage =:image where id=:userid")
     void updateProfileImage(String image, int userid);
 
+    @Query("Select username from User where id =:userId")
+    String getUsername(int userId);
+
 }

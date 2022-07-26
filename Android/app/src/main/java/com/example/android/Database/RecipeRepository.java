@@ -35,4 +35,8 @@ public class RecipeRepository {
     public int newId(){
         return recipeDAO.newId();
     }
+
+    public Recipe getRecipe(int recipeId){
+        return recipeDAO.getRecipe(recipeId);
+    }
 }
