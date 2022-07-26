@@ -181,7 +181,7 @@ public class AddRecipeFragment extends Fragment {
                     recipeRepository.addRecipe(recipe);
                     int id = recipeRepository.newId();
                     FavoriteRecipes favoriteRecipes = new FavoriteRecipes(recipe.title, recipe.description,
-                            recipe.ingredients, recipe.author, recipe.photo, recipe.guidelines, recipe.id, ((GlobalClass)getActivity().getApplication()).getUserId());
+                            recipe.ingredients, recipe.author, recipe.photo, recipe.guidelines, id+1, ((GlobalClass)getActivity().getApplication()).getUserId());
                     favoriteRecipesRepository.insertFavoriteRecipe(favoriteRecipes);
 
                     //add points to the recipe author

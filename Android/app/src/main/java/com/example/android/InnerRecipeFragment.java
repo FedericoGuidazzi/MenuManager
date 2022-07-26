@@ -43,6 +43,7 @@ public class InnerRecipeFragment extends Fragment {
     private ImageView recipeImageView;
     private ImageButton shareButton;
     private ImageButton actionFavourite;
+    private Recipe recipe;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -84,6 +85,7 @@ public class InnerRecipeFragment extends Fragment {
         favoriteRecipesRepository = new FavoriteRecipesRepository(getActivity().getApplication());
         recipeRepository = new RecipeRepository(getActivity().getApplication());
         userRepository = new userRepository(getActivity().getApplication());
+        recipe = recipeRepository.getRecipe(recipeId);
     }
 
     @Override
@@ -91,33 +93,25 @@ public class InnerRecipeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_inner_recipe, container, false);
-        Recipe recipe = recipeRepository.getRecipe(recipeId);
-        String authorName = userRepository.getUsername(recipe.author);
         recipeNameTextView = view.findViewById(R.id.recipe_name);
         shareButton = view.findViewById(R.id.share_button);
         //fare le cose in caso si voglia fare lo share
 
         actionFavourite = view.findViewById(R.id.action_favourite);
-        //settare la giusta icona per il bottone
         FavoriteRecipes favoriteRecipes = favoriteRecipesRepository.getRecipe(((GlobalClass)getActivity().getApplication()).getUserId(), recipeId);
         if(favoriteRecipes == null){
             actionFavourite.setBackgroundResource(R.drawable.ic_baseline_save_alt_24);
-            actionFavourite.setMaxWidth(30);
-            actionFavourite.setMaxHeight(30);
         } else {
             actionFavourite.setBackgroundResource(R.drawable.ic_baseline_bookmark_remove_24);
-            actionFavourite.setMaxWidth(30);
-            actionFavourite.setMaxHeight(30);
         }
-
+        actionFavourite.setMaxWidth(30);
+        actionFavourite.setMaxHeight(30);
 
         recipeAuthorTextView = view.findViewById(R.id.recipe_author);
         recipeImageView = view.findViewById(R.id.recipe_image);
         recipeDescriptionTextView = view.findViewById(R.id.recipe_description);
         recipeIngredientsTextView = view.findViewById(R.id.recipe_ingredients);
         recipeGuideLinesTextView = view.findViewById(R.id.recipe_guidelines);
-
-        recipeAuthorTextView.setText(authorName);
         recipeAuthorTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -154,11 +148,12 @@ public class InnerRecipeFragment extends Fragment {
 
             }
         });
-
+        String authorName = userRepository.getUsername(recipe.author);
         recipeNameTextView.setText(recipe.title);
         recipeDescriptionTextView.setText(recipe.description);
         recipeIngredientsTextView.setText(recipe.ingredients);
         recipeGuideLinesTextView.setText(recipe.guidelines);
+        recipeAuthorTextView.setText(authorName);
         return view;
     }
 }
