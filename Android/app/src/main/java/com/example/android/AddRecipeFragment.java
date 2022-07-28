@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.example.android.Database.FavoriteRecipesRepository;
 import com.example.android.Database.RecipeRepository;
+import com.example.android.Database.database;
 import com.example.android.Database.userRepository;
 import com.example.android.ViewModel.AddViewModel;
 import com.google.android.material.button.MaterialButton;
@@ -212,7 +213,9 @@ public class AddRecipeFragment extends Fragment {
                         Toast.makeText(getActivity(), "Your recipe has been added successfully", Toast.LENGTH_SHORT).show();
                         ((MainActivity)getActivity()).replaceFragment(new recipesFragment());
                     } else {
-                        //uploadare recipe e favorite recipe
+                        favoriteRecipesRepository.uploadRecipe(recipeTitle, recipeDescription, recipeIngredients, recipreGuidelines, recipeImage, recipeId);
+                        recipeRepository.uploadRecipe(recipeTitle, recipeDescription, recipeIngredients, recipreGuidelines, recipeImage, recipeId);
+                        Toast.makeText(getActivity(), "Your recipe has been updated successfully", Toast.LENGTH_SHORT).show();
                     }
 
                 } else {

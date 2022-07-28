@@ -48,4 +48,13 @@ public class FavoriteRecipesRepository {
             }
         });
     }
+
+    public void uploadRecipe(String title, String description, String ingredients, String guidelines, String photo, int recipeId){
+        database.executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                favoriteRecipesDAO.uploadRecipe(title, description, ingredients, guidelines, photo, recipeId);
+            }
+        });
+    }
 }

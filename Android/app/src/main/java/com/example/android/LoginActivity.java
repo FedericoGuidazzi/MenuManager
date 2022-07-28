@@ -65,20 +65,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void isUser(String username, String password){
-        LiveData<List<User>> userList = userRepository.getUsers();
-        final boolean[] check = {false};
-        userList.observe(this, new Observer<List<User>>() {
-            @Override
-            public void onChanged(List<User> users) {
-                for(User user : users){
-                    if(user.username.equals(username) && user.password.equals(password)) {
-                        userId = user.id;
-                        openHomepage();
-                        return;
-                    }
-                }
-                Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
+        List<User> userList = userRepository.getUsers1();
+        for(User user : userList){
+            if(user.username.equals(username) && user.password.equals(password)) {
+                userId = user.id;
+                openHomepage();
+                return;
             }
-        });
+        }
+        Toast.makeText(getApplication(), "Login Failed", Toast.LENGTH_SHORT).show();
     }
 }

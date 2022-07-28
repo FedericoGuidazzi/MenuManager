@@ -3,6 +3,7 @@ package com.example.android.Database;
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
+import androidx.room.Query;
 
 import com.example.android.Recipe;
 
@@ -50,6 +51,15 @@ public class RecipeRepository {
             @Override
             public void run() {
                 recipeDAO.deleteRecipe(recipeId);
+            }
+        });
+    }
+
+    public void uploadRecipe(String title, String description, String ingredients, String guidelines, String photo, int recipeId){
+        database.executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                recipeDAO.uploadRecipe(title, description, ingredients, guidelines, photo, recipeId);
             }
         });
     }

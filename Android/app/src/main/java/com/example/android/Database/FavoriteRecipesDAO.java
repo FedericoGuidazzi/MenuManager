@@ -25,4 +25,7 @@ public interface FavoriteRecipesDAO {
 
     @Query("Delete from FavoriteRecipes where recipeId=:recipeId")
     void deleteRecipe(int recipeId);
+
+    @Query("Update FavoriteRecipes set title =:title, description =:description, ingredients =:ingredients, guidelines =:guidelines, photo =:photo where recipeId =:recipeId")
+    void uploadRecipe(String title, String description, String ingredients, String guidelines, String photo, int recipeId);
 }

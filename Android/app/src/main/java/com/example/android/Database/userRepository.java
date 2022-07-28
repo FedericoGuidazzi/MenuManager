@@ -29,6 +29,10 @@ public class userRepository {
         return userDAO.getUsersByRank();
     }
 
+    public List<User> getUsers1(){
+        return userDAO.getUsers1();
+    }
+
     public LiveData<List<User>> getUsers(){
         return userDAO.getUsers();
     }

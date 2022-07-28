@@ -31,4 +31,7 @@ public interface RecipeDAO {
 
     @Query("Delete from Recipe where id =:recipeId")
     void deleteRecipe(int recipeId);
+
+    @Query("Update Recipe set title =:title, description =:description, ingredients =:ingredients, guidelines =:guidelines, photo =:photo where id =:recipeId")
+    void uploadRecipe(String title, String description, String ingredients, String guidelines, String photo, int recipeId);
 }
