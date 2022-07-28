@@ -1,5 +1,6 @@
 package com.example.android;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -95,7 +96,17 @@ public class InnerRecipeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_inner_recipe, container, false);
         recipeNameTextView = view.findViewById(R.id.recipe_name);
         shareButton = view.findViewById(R.id.share_button);
-        //fare le cose in caso si voglia fare lo share
+        //the share is a link to the recipe using google(of course in this project didn't work)
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey, check out this recipe. https://MenuManager.com/recipeid="+recipeId);
+                sendIntent.setType("text/plain");
+                startActivity(sendIntent);
+            }
+        });
 
         actionFavourite = view.findViewById(R.id.action_favourite);
         FavoriteRecipes favoriteRecipes = favoriteRecipesRepository.getRecipe(((GlobalClass)getActivity().getApplication()).getUserId(), recipeId);
