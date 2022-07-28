@@ -11,16 +11,26 @@ import java.util.List;
 public class userRepository {
     private final UserDAO userDAO;
 
-    private final LiveData<List<User>> userlist;
 
     public userRepository(Application application){
         database db = database.getDatabase(application);
         userDAO = db.userDAO();
-        userlist = userDAO.getUser();
     }
 
-    public LiveData<List<User>> getUser(){
-        return userlist;
+    public User getUser(int userId){
+        return userDAO.getUser(userId);
+    }
+
+    public int getUserCount(){
+        return userDAO.getUsersCount();
+    }
+
+    public List<User> getUserByRank(){
+        return userDAO.getUsersByRank();
+    }
+
+    public LiveData<List<User>> getUsers(){
+        return userDAO.getUsers();
     }
 
     public void addUser(User user){
@@ -37,6 +47,15 @@ public class userRepository {
             @Override
             public void run() {
                 userDAO.updateUserScore(score, userid);
+            }
+        });
+    }
+
+    public void updateImage(String image, int userId){
+        database.executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                userDAO.updateImage(image, userId);
             }
         });
     }

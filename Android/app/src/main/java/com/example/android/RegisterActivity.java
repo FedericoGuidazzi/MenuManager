@@ -1,6 +1,7 @@
 package com.example.android;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -77,7 +78,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     //function that checks if the username is already taken, if not, add the user and show the home
     public void checkUsername(String username, String password){
-        LiveData<List<User>> userList = userRepository.getUser();
+        LiveData<List<User>> userList = userRepository.getUsers();
         userList.observe(this, new Observer<List<User>>() {
             @Override
             public void onChanged(List<User> users) {
@@ -112,6 +113,7 @@ public class RegisterActivity extends AppCompatActivity {
         User user = new User();
         user.username=username;
         user.password=password;
+        user.profileImage = Uri.parse("android.resource://"+R.class.getPackage().getName()+"/" +"ic_baseline_account_circle_24.xml").toString();
         userRepository.addUser(user);
     }
 

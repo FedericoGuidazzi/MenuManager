@@ -16,7 +16,7 @@ import com.example.android.User;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {User.class, Recipe.class, Calendar.class, ItemShoppingList.class, FavoriteRecipes.class}, version = 1)
+@Database(entities = {User.class, Recipe.class, Calendar.class, ItemShoppingList.class, FavoriteRecipes.class}, version = 2)
 
 public abstract class database extends RoomDatabase {
     public abstract UserDAO userDAO();

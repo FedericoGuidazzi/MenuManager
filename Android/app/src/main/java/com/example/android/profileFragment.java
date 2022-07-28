@@ -1,20 +1,40 @@
 package com.example.android;
 
+import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.Database.userRepository;
+import com.example.android.ViewModel.AddViewModel;
+import com.google.android.material.button.MaterialButton;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,9 +43,14 @@ import java.util.List;
  */
 public class profileFragment extends Fragment {
 
-    TextView usernameTextView;
+    TextView usernameTextView, rankText;
     userRepository userRepository;
-    LiveData<List<User>> userList;
+    private MaterialButton buttonTake, buttonUpload;
+    private int userId;
+    private ImageView profileImage;
+
+    public final static int RESULT_LOAD_IMAGE = 2;
+    public final static int REQUEST_IMAGE_CAPTURE = 3;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -37,6 +62,10 @@ public class profileFragment extends Fragment {
 
     public profileFragment() {
         // Required empty public constructor
+    }
+
+    public profileFragment(int userId){
+        this.userId = userId;
     }
 
     /**
@@ -61,7 +90,6 @@ public class profileFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         userRepository = new userRepository(getActivity().getApplication());
-        userList = userRepository.getUser();
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -74,17 +102,113 @@ public class profileFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         usernameTextView = view.findViewById(R.id.usernameText);
-        userList.observe(getActivity(), new Observer<List<User>>() {
+        profileImage = view.findViewById(R.id.profileImage);
+        rankText = view.findViewById(R.id.rankText);
+        buttonTake = view.findViewById(R.id.button_take);
+        buttonUpload = view.findViewById(R.id.button_upload);
+        User user = userRepository.getUser(userId);
+        usernameTextView.setText(user.username);
+        if(userId != ((GlobalClass)getActivity().getApplication()).getUserId()){
+            buttonTake.setVisibility(View.GONE);
+            buttonUpload.setVisibility(View.GONE);
+        }
+        if (user.profileImage.contains("ic_")){
+            Drawable drawable = AppCompatResources.getDrawable(getActivity().getApplicationContext(), R.drawable.ic_baseline_account_circle_24);
+            profileImage.setImageDrawable(drawable);
+        } else {
+            Bitmap bitmap = Utilities.getImageBitmap(getActivity(), Uri.parse(user.profileImage));
+            if (bitmap != null){
+                profileImage.setImageBitmap(bitmap);
+            }
+        }
+        List<User> listUserRank = userRepository.getUserByRank();
+        int userRank = 0;
+        for(int i=1; i<=listUserRank.size();i++){
+            if(userId == listUserRank.get(i-1).id){
+                userRank = i;
+                break;
+            }
+        }
+        rankText.setText(""+userRank+" out of "+listUserRank.size());
+
+        AddViewModel addViewModel = new ViewModelProvider((ViewModelStoreOwner) getActivity()).get(AddViewModel.class);
+
+        buttonUpload.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onChanged(List<User> users) {
-                for(User user: users){
-                    if(user.id == ((GlobalClass) getActivity().getApplication()).getUserId() ){
-                        usernameTextView.setText(user.username);
-                        break;
-                    }
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                getActivity().startActivityForResult(intent, RESULT_LOAD_IMAGE);
+            }
+        });
+
+        buttonTake.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if(intent.resolveActivity(getActivity().getPackageManager()) != null){
+                    getActivity().startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
                 }
             }
         });
+
+        addViewModel.getImageBitmap().observe(getViewLifecycleOwner(), new Observer<Bitmap>() {
+            //code to visualize image if is taken
+            @Override
+            public void onChanged(Bitmap bitmap) {
+                profileImage.setImageBitmap(bitmap);
+                updateImage(addViewModel);
+            }
+        });
+
+        addViewModel.getImageUri().observe(getViewLifecycleOwner(), new Observer<Uri>() {
+            //code to visualize image if is uploaded
+            @Override
+            public void onChanged(Uri uri) {
+                profileImage.setImageURI(uri);
+                updateImage(addViewModel);
+            }
+        });
         return view;
+    }
+    void updateImage(AddViewModel addViewModel){
+        Bitmap bitmap = addViewModel.getImageBitmap().getValue();
+        Uri uri = addViewModel.getImageUri().getValue();
+        String image = Uri.parse("android.resource://"+R.class.getPackage().getName()+"/" +"ic_baseline_profile_circle_24.xml").toString();
+        if(bitmap != null){
+            try {
+                image = String.valueOf(saveImage(bitmap, getActivity()));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else if(uri != null){
+            image = String.valueOf(uri);
+        }
+        userRepository.updateImage(image, userId);
+    }
+    private Uri saveImage(Bitmap bitmap, Activity activity) throws FileNotFoundException {
+        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ITALY)
+                .format(new Date());
+        String name = "JPEG_" + timestamp + ".jpg";
+
+        ContentResolver contentResolver = activity.getContentResolver();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, name);
+        contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg");
+
+        Uri imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                contentValues);
+
+
+        OutputStream outputStream = contentResolver.openOutputStream(imageUri);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+
+        try {
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return imageUri;
+
     }
 }

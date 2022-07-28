@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                     replaceFragment(new ShoppingListFragment());
                     break;
                 case R.id.profile:
-                    replaceFragment(new profileFragment());
+                    replaceFragment(new profileFragment(((GlobalClass)getApplication()).getUserId()));
                     break;
                 case R.id.social:
                     replaceFragment(new socialFragment());

@@ -65,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void isUser(String username, String password){
-        LiveData<List<User>> userList = userRepository.getUser();
+        LiveData<List<User>> userList = userRepository.getUsers();
         final boolean[] check = {false};
         userList.observe(this, new Observer<List<User>>() {
             @Override

@@ -126,8 +126,8 @@ public class InnerRecipeFragment extends Fragment {
         recipeAuthorTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //cambiare nella schermata dell'utente
-                Log.e("premuto", ""+recipe.author );
+                ((MainActivity)getActivity()).replaceFragment(new profileFragment(recipe.author));
+
             }
         });
         if (recipe.photo.contains("ic_")){
@@ -143,20 +143,16 @@ public class InnerRecipeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (actionFavourite.getBackground().getConstantState().equals(getResources().getDrawable(R.drawable.ic_baseline_save_alt_24).getConstantState())) {
-                    //inserire la ricetta nelle preferite
                     FavoriteRecipes favoriteRecipes1 = new FavoriteRecipes(recipe.title, recipe.description,
                             recipe.ingredients, recipe.author, recipe.photo, recipe.guidelines, recipe.id,((GlobalClass)getActivity().getApplication()).getUserId());
                             userRepository.updateUserScore(100, recipe.author);
                     favoriteRecipesRepository.insertFavoriteRecipe(favoriteRecipes1);
                     actionFavourite.setBackgroundResource(R.drawable.ic_baseline_bookmark_remove_24);
                 } else {
-                   //rimuovere la ricetta dalle preferite
                     favoriteRecipesRepository.removeFavoriteRecipe(((GlobalClass)getActivity().getApplication()).getUserId(), recipeId);
                     userRepository.updateUserScore(-100, recipe.author);
                     actionFavourite.setBackgroundResource(R.drawable.ic_baseline_save_alt_24);
                 }
-
-
             }
         });
         String authorName = userRepository.getUsername(recipe.author);

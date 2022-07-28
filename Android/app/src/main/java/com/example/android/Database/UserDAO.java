@@ -15,8 +15,11 @@ public interface UserDAO {
     @Insert
     void insertUser(User user);
 
-    @Query("SELECT * From User")
-    LiveData<List<User>> getUser();
+    @Query("SELECT * From User where id =:userId")
+    User getUser(int userId);
+
+    @Query("Select * from User")
+    LiveData<List<User>> getUsers();
 
     @Query("UPDATE User set score= score+ :score where id=:userid")
     void updateUserScore(int score, int userid);
@@ -27,4 +30,12 @@ public interface UserDAO {
     @Query("Select username from User where id =:userId")
     String getUsername(int userId);
 
+    @Query("SELECT COUNT(id) FROM User")
+    int getUsersCount();
+
+    @Query("Select * from User order by score desc")
+    List<User> getUsersByRank();
+
+    @Query("Update User set profileImage =:image where id =:userId")
+    void updateImage(String image, int userId);
 }
