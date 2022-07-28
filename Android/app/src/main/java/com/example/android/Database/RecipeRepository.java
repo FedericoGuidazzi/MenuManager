@@ -39,4 +39,18 @@ public class RecipeRepository {
     public Recipe getRecipe(int recipeId){
         return recipeDAO.getRecipe(recipeId);
     }
+
+    public List<Recipe> getUserRecipe(int userId){
+        return recipeDAO.getUserRecipe(userId);
+
+    }
+
+    public void deleteRecipe(int recipeId){
+        database.executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                recipeDAO.deleteRecipe(recipeId);
+            }
+        });
+    }
 }

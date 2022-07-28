@@ -78,7 +78,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
         String photo = itemList.get(position).getPhoto();
         holder.recipeName.setText(name);
         holder.recipeId.setText(""+itemList.get(position).getRecipeId());
-        holder.imageView.setImageURI(Uri.parse(photo));
+        //holder.imageView.setImageURI(Uri.parse(photo));
         if (photo.contains("ic_")){
             Drawable drawable = AppCompatResources.getDrawable(fragment.getActivity().getApplicationContext(), R.drawable.ic_baseline_fastfood_24);
             holder.imageView.setImageDrawable(drawable);

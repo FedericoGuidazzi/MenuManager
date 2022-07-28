@@ -39,4 +39,13 @@ public class FavoriteRecipesRepository {
             }
         });
     }
+
+    public void deleteRecipe(int recipeId){
+        database.executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                favoriteRecipesDAO.deleteRecipe(recipeId);
+            }
+        });
+    }
 }

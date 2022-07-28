@@ -25,4 +25,10 @@ public interface RecipeDAO {
 
     @Query("Select * from Recipe where id =:recipeId")
     Recipe getRecipe(int recipeId);
+
+    @Query("Select * from Recipe where author =:userId")
+    List<Recipe> getUserRecipe(int userId);
+
+    @Query("Delete from Recipe where id =:recipeId")
+    void deleteRecipe(int recipeId);
 }

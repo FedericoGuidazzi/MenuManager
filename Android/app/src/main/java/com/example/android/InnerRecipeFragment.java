@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.example.android.Database.FavoriteRecipesRepository;
 import com.example.android.Database.RecipeRepository;
 import com.example.android.Database.userRepository;
+import com.google.android.material.button.MaterialButton;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,6 +46,7 @@ public class InnerRecipeFragment extends Fragment {
     private ImageButton shareButton;
     private ImageButton actionFavourite;
     private Recipe recipe;
+    private MaterialButton deleteButton, modifyButton;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -96,6 +98,28 @@ public class InnerRecipeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_inner_recipe, container, false);
         recipeNameTextView = view.findViewById(R.id.recipe_name);
         shareButton = view.findViewById(R.id.share_button);
+        deleteButton = view.findViewById(R.id.delete_button);
+        modifyButton = view.findViewById(R.id.modify_button);
+        if(recipeId != ((GlobalClass)getActivity().getApplication()).getUserId()){
+            deleteButton.setVisibility(View.GONE);
+            modifyButton.setVisibility(View.GONE);
+        }
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //eliminare i record da tutte le tabelle
+                favoriteRecipesRepository.deleteRecipe(recipeId);
+                recipeRepository.deleteRecipe(recipeId);
+                ((MainActivity)getActivity()).replaceFragment(new profileFragment(recipe.author));
+            }
+        });
+
+        modifyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((MainActivity)getActivity()).replaceFragment(new AddRecipeFragment(recipeId));
+            }
+        });
         //the share is a link to the recipe using google(of course in this project didn't work)
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,7 +151,6 @@ public class InnerRecipeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 ((MainActivity)getActivity()).replaceFragment(new profileFragment(recipe.author));
-
             }
         });
         if (recipe.photo.contains("ic_")){

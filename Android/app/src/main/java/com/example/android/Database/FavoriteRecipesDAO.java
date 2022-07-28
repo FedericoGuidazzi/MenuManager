@@ -22,4 +22,7 @@ public interface FavoriteRecipesDAO {
 
     @Query("Delete from FavoriteRecipes where userId =:userId and recipeId =:recipeId")
     void removeFavoriteRecipe(int userId, int recipeId);
+
+    @Query("Delete from FavoriteRecipes where recipeId=:recipeId")
+    void deleteRecipe(int recipeId);
 }

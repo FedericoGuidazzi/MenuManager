@@ -11,10 +11,12 @@ import android.os.Bundle;
 
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -22,9 +24,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.android.Database.RecipeRepository;
 import com.example.android.Database.userRepository;
+import com.example.android.RecycleView.RecipeSocialAdapter;
 import com.example.android.ViewModel.AddViewModel;
 import com.google.android.material.button.MaterialButton;
 
@@ -32,6 +35,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -46,8 +50,11 @@ public class profileFragment extends Fragment {
     TextView usernameTextView, rankText;
     userRepository userRepository;
     private MaterialButton buttonTake, buttonUpload;
+    private ArrayList<Recipe> recipeList;
     private int userId;
     private ImageView profileImage;
+    private RecyclerView recyclerView;
+    private RecipeRepository recipeRepository;
 
     public final static int RESULT_LOAD_IMAGE = 2;
     public final static int REQUEST_IMAGE_CAPTURE = 3;
@@ -90,6 +97,7 @@ public class profileFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         userRepository = new userRepository(getActivity().getApplication());
+        recipeRepository = new RecipeRepository(getActivity().getApplication());
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -106,8 +114,10 @@ public class profileFragment extends Fragment {
         rankText = view.findViewById(R.id.rankText);
         buttonTake = view.findViewById(R.id.button_take);
         buttonUpload = view.findViewById(R.id.button_upload);
+        recyclerView = view.findViewById(R.id.recycler_view_profile);
         User user = userRepository.getUser(userId);
         usernameTextView.setText(user.username);
+        setRecipes();
         if(userId != ((GlobalClass)getActivity().getApplication()).getUserId()){
             buttonTake.setVisibility(View.GONE);
             buttonUpload.setVisibility(View.GONE);
@@ -136,7 +146,7 @@ public class profileFragment extends Fragment {
         buttonUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 getActivity().startActivityForResult(intent, RESULT_LOAD_IMAGE);
             }
         });
@@ -209,6 +219,14 @@ public class profileFragment extends Fragment {
         }
 
         return imageUri;
+    }
 
+    private void setRecipes(){
+        recipeList = new ArrayList<>(recipeRepository.getUserRecipe(userId));
+        RecipeSocialAdapter recyclerAdapter = new RecipeSocialAdapter(recipeList, this);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(recyclerAdapter);
     }
 }

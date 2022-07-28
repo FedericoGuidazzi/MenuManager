@@ -79,7 +79,7 @@ public class RecipeSocialAdapter extends RecyclerView.Adapter<RecipeSocialAdapte
         String photo = itemList.get(position).getPhoto();
         holder.recipeName.setText(name);
         holder.recipeId.setText(""+id);
-        holder.imageView.setImageURI(Uri.parse(photo));
+        //holder.imageView.setImageURI(Uri.parse(photo));
         if (photo.contains("ic_")){
             Drawable drawable = AppCompatResources.getDrawable(fragment.getActivity().getApplicationContext(), R.drawable.ic_baseline_fastfood_24);
             holder.imageView.setImageDrawable(drawable);

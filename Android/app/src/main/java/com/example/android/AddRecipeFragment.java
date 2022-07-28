@@ -5,9 +5,11 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -54,6 +56,7 @@ public class AddRecipeFragment extends Fragment {
     FavoriteRecipesRepository favoriteRecipesRepository;
     userRepository userRepository;
     ImageView recipeImageView;
+    private int recipeId = 0;
     public final static int RESULT_LOAD_IMAGE = 2;
     public final static int REQUEST_IMAGE_CAPTURE = 3;
 
@@ -70,6 +73,9 @@ public class AddRecipeFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public AddRecipeFragment(int recipeId){
+        this.recipeId = recipeId;
+    }
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -117,7 +123,7 @@ public class AddRecipeFragment extends Fragment {
        uploadPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 getActivity().startActivityForResult(intent, RESULT_LOAD_IMAGE);
             }
         });
@@ -149,6 +155,22 @@ public class AddRecipeFragment extends Fragment {
                 recipeImageView.setImageURI(uri);
             }
         });
+        if (recipeId != 0){
+            Recipe recipe = recipeRepository.getRecipe(recipeId);
+            title.setText(recipe.title);
+            description.setText(recipe.description);
+            ingredients.setText(recipe.ingredients);
+            guidelines.setText(recipe.guidelines);
+            if (recipe.photo.contains("ic_")){
+                Drawable drawable = AppCompatResources.getDrawable(getActivity().getApplicationContext(), R.drawable.ic_baseline_fastfood_24);
+                recipeImageView.setImageDrawable(drawable);
+            } else {
+                Bitmap bitmap = Utilities.getImageBitmap(getActivity(), Uri.parse(recipe.photo));
+                if (bitmap != null){
+                    recipeImageView.setImageBitmap(bitmap);
+                }
+            }
+        }
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -176,23 +198,29 @@ public class AddRecipeFragment extends Fragment {
                     } else {
                         recipeImage = Uri.parse("android.resource://"+R.class.getPackage().getName()+"/" +"ic_baseline_fastfood_24.xml").toString();
                     }
-                    Recipe recipe = new Recipe(recipeTitle, recipeDescription, recipeIngredients,
-                            ((GlobalClass)getActivity().getApplication()).getUserId(), recipeImage, recipreGuidelines);
-                    recipeRepository.addRecipe(recipe);
-                    int id = recipeRepository.newId();
-                    FavoriteRecipes favoriteRecipes = new FavoriteRecipes(recipe.title, recipe.description,
-                            recipe.ingredients, recipe.author, recipe.photo, recipe.guidelines, id+1, ((GlobalClass)getActivity().getApplication()).getUserId());
-                    favoriteRecipesRepository.insertFavoriteRecipe(favoriteRecipes);
+                    if(recipeId == 0){
+                        Recipe recipe = new Recipe(recipeTitle, recipeDescription, recipeIngredients,
+                                ((GlobalClass)getActivity().getApplication()).getUserId(), recipeImage, recipreGuidelines);
+                        recipeRepository.addRecipe(recipe);
+                        int id = recipeRepository.newId();
+                        FavoriteRecipes favoriteRecipes = new FavoriteRecipes(recipe.title, recipe.description,
+                                recipe.ingredients, recipe.author, recipe.photo, recipe.guidelines, id+1, ((GlobalClass)getActivity().getApplication()).getUserId());
+                        favoriteRecipesRepository.insertFavoriteRecipe(favoriteRecipes);
 
-                    //add points to the recipe author
-                    userRepository.updateUserScore(100, ((GlobalClass)getActivity().getApplication()).getUserId());
-                    Toast.makeText(getActivity(), "Your recipe has been added successfully", Toast.LENGTH_SHORT).show();
-                    ((MainActivity)getActivity()).replaceFragment(new recipesFragment());
+                        //add points to the recipe author
+                        userRepository.updateUserScore(100, ((GlobalClass)getActivity().getApplication()).getUserId());
+                        Toast.makeText(getActivity(), "Your recipe has been added successfully", Toast.LENGTH_SHORT).show();
+                        ((MainActivity)getActivity()).replaceFragment(new recipesFragment());
+                    } else {
+                        //uploadare recipe e favorite recipe
+                    }
+
                 } else {
                     Toast.makeText(getActivity(), "You need to fill all the fields", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
         return view;
     }
 

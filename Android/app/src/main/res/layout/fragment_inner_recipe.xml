@@ -21,6 +21,24 @@
                 android:gravity="right"
                 android:orientation="horizontal">
 
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/modify_button"
+                    android:text="Modify recipe"
+                    android:textSize="10dp"
+                    android:layout_marginRight="10dp"
+                    android:textColor="@color/black"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/delete_button"
+                    android:text="Delete recipe"
+                    android:textSize="10dp"
+                    android:layout_marginRight="10dp"
+                    android:textColor="@color/black"/>
+
                 <ImageButton
                     android:id="@+id/share_button"
                     android:layout_width="50dp"
