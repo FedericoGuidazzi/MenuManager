@@ -19,4 +19,5 @@
     <string name="guidelines_text">Guidelines</string>
     <string name="ingredients_text">Ingredients</string>
     <string name="description_text">Description</string>
+    <string name="search_recipe_title">Search for a recipe title</string>
 </resources>

@@ -17,6 +17,9 @@ public interface FavoriteRecipesDAO {
     @Query("Select * from FavoriteRecipes where userId =:userId")
     List<FavoriteRecipes> getFavoriteRecipes(int userId);
 
+    @Query("Select * from FavoriteRecipes where userId =:userId and title LIKE '%' || :query  || '%'")
+    List<FavoriteRecipes> getFavoriteRecipesForTitle(int userId, String query);
+
     @Query("Select * from FavoriteRecipes where userId =:userId and recipeId =:recipeId")
     FavoriteRecipes getFavoriteRecipe(int userId, int recipeId);
 

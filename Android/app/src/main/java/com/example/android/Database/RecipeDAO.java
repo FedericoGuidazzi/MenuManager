@@ -6,6 +6,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 
 
+import com.example.android.FavoriteRecipes;
 import com.example.android.Recipe;
 
 import java.util.List;
@@ -19,6 +20,9 @@ public interface RecipeDAO {
 
     @Query("SELECT * FROM Recipe")
     List<Recipe> getRecipes();
+
+    @Query("Select * from Recipe where title LIKE '%' || :query  || '%'")
+    List<Recipe> getRecipeForTitle(String query);
 
     @Query("Select id from Recipe order by id desc limit 1")
     int newId();

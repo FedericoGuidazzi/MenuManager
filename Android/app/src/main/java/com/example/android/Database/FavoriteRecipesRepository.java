@@ -18,6 +18,10 @@ public class FavoriteRecipesRepository {
         return favoriteRecipesDAO.getFavoriteRecipes(userId);
     }
 
+    public List<FavoriteRecipes> getFavouriteRecipesForTitle(int userId, String title){
+        return favoriteRecipesDAO.getFavoriteRecipesForTitle(userId, title);
+    }
+
     public void insertFavoriteRecipe(FavoriteRecipes favoriteRecipes){
         database.executor.execute(new Runnable() {
             @Override

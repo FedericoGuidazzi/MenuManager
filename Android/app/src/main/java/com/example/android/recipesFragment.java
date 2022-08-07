@@ -1,11 +1,14 @@
 package com.example.android;
 
 import android.os.Bundle;
+
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +32,7 @@ public class recipesFragment extends Fragment {
     private ArrayList<FavoriteRecipes> recipeList;
     private RecyclerView recyclerView;
     private FavoriteRecipesRepository recipeRepository;
+    private SearchView searchView;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -79,7 +83,20 @@ public class recipesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_recipes, container, false);
         floatingActionButton = view.findViewById(R.id.fab_add);
         recyclerView = view.findViewById(R.id.recycler_view);
-        setRecipes();
+        searchView = view.findViewById(R.id.search_view);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                setRecipes(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        setRecipes("default");
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,8 +107,12 @@ public class recipesFragment extends Fragment {
     }
 
 
-    private void setRecipes(){
-        recipeList = new ArrayList<>(recipeRepository.getFavoriteRecipes(((GlobalClass)getActivity().getApplication()).getUserId()));
+    private void setRecipes(String query){
+        if(query.equals("default")){
+            recipeList = new ArrayList<>(recipeRepository.getFavoriteRecipes(((GlobalClass)getActivity().getApplication()).getUserId()));
+        } else {
+            recipeList = new ArrayList<>(recipeRepository.getFavouriteRecipesForTitle(((GlobalClass)getActivity().getApplication()).getUserId(), query));
+        }
         RecipeAdapter recyclerAdapter = new RecipeAdapter(recipeList, this);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);

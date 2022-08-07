@@ -24,6 +24,10 @@ public class RecipeRepository {
         return recipeList;
     }
 
+    public List<Recipe> getRecipeForTitle(String title){
+        return recipeDAO.getRecipeForTitle(title);
+    }
+
     public void addRecipe(Recipe recipe){
         database.executor.execute(new Runnable() {
             @Override

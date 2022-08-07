@@ -2,6 +2,7 @@ package com.example.android;
 
 import android.os.Bundle;
 
+import androidx.appcompat.widget.SearchView;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -26,6 +27,7 @@ public class socialFragment extends Fragment {
     private ArrayList<Recipe> recipeList;
     private RecyclerView recyclerView;
     private RecipeRepository recipeRepository;
+    private SearchView searchView;
     private CardView cardView;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -75,12 +77,30 @@ public class socialFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_social, container, false);
         recyclerView = view.findViewById(R.id.recycler_view);
-        setRecipes();
+        searchView = view.findViewById(R.id.search_view);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                setRecipes(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        setRecipes("default");
         return view;
     }
 
-    private void setRecipes(){
-        recipeList = new ArrayList<>(recipeRepository.getRecipes());
+    private void setRecipes(String query){
+        if(query.equals("default")){
+            recipeList = new ArrayList<>(recipeRepository.getRecipes());
+        } else {
+            recipeList = new ArrayList<>(recipeRepository.getRecipeForTitle(query));
+        }
+
         RecipeSocialAdapter recyclerAdapter = new RecipeSocialAdapter(recipeList, this);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
