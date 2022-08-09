@@ -6,6 +6,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -56,6 +57,7 @@ public class profileFragment extends Fragment {
 
     TextView usernameTextView, rankText;
     userRepository userRepository;
+    private String profileImagePath = "";
     private MaterialButton buttonTake, buttonUpload;
     private ArrayList<Recipe> recipeList;
     private int userId;
@@ -195,7 +197,14 @@ public class profileFragment extends Fragment {
             //code to visualize image if is uploaded
             @Override
             public void onChanged(Uri uri) {
-                profileImage.setImageURI(uri);
+                profileImagePath = getRealPathFromURI(uri, getActivity());
+                File imgFile = new  File(profileImagePath);
+
+                if(imgFile.exists()){
+                    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                    profileImage.setImageBitmap(myBitmap);
+                }
+
                 updateImage(addViewModel);
             }
         });
@@ -220,7 +229,6 @@ public class profileFragment extends Fragment {
     }
     void updateImage(AddViewModel addViewModel){
         Bitmap bitmap = addViewModel.getImageBitmap().getValue();
-        Uri uri = addViewModel.getImageUri().getValue();
         String image = Uri.parse("android.resource://"+R.class.getPackage().getName()+"/" +"ic_baseline_profile_circle_24.xml").toString();
         if(bitmap != null){
             try {
@@ -228,8 +236,8 @@ public class profileFragment extends Fragment {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-        } else if(uri != null){
-            image = String.valueOf(uri);
+        }else if(!profileImagePath.equals("")){
+            image = profileImagePath;
         }
         userRepository.updateImage(image, userId);
     }
@@ -257,6 +265,24 @@ public class profileFragment extends Fragment {
         }
 
         return imageUri;
+    }
+
+    public String getRealPathFromURI(Uri contentURI, Activity context) {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        @SuppressWarnings("deprecation")
+        Cursor cursor = context.managedQuery(contentURI, projection, null,
+                null, null);
+        if (cursor == null)
+            return null;
+        int column_index = cursor
+                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        if (cursor.moveToFirst()) {
+            String s = cursor.getString(column_index);
+            // cursor.close();
+            return s;
+        }
+        // cursor.close();
+        return null;
     }
 
     private void setRecipes(){
