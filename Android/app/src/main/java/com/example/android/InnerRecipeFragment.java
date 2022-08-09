@@ -100,7 +100,7 @@ public class InnerRecipeFragment extends Fragment {
         shareButton = view.findViewById(R.id.share_button);
         deleteButton = view.findViewById(R.id.delete_button);
         modifyButton = view.findViewById(R.id.modify_button);
-        if(recipeId != ((GlobalClass)getActivity().getApplication()).getUserId()){
+        if(recipe.author != ((GlobalClass)getActivity().getApplication()).getUserId()){
             deleteButton.setVisibility(View.GONE);
             modifyButton.setVisibility(View.GONE);
         }
