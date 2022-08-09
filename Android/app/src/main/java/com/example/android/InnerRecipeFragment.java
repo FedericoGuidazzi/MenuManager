@@ -2,6 +2,7 @@ package com.example.android;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,6 +22,8 @@ import com.example.android.Database.FavoriteRecipesRepository;
 import com.example.android.Database.RecipeRepository;
 import com.example.android.Database.userRepository;
 import com.google.android.material.button.MaterialButton;
+
+import java.io.File;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -100,7 +103,7 @@ public class InnerRecipeFragment extends Fragment {
         shareButton = view.findViewById(R.id.share_button);
         deleteButton = view.findViewById(R.id.delete_button);
         modifyButton = view.findViewById(R.id.modify_button);
-        if(recipe.author != ((GlobalClass)getActivity().getApplication()).getUserId()){
+        if (recipe.author != ((GlobalClass) getActivity().getApplication()).getUserId()) {
             deleteButton.setVisibility(View.GONE);
             modifyButton.setVisibility(View.GONE);
         }
@@ -110,14 +113,14 @@ public class InnerRecipeFragment extends Fragment {
                 //eliminare i record da tutte le tabelle
                 favoriteRecipesRepository.deleteRecipe(recipeId);
                 recipeRepository.deleteRecipe(recipeId);
-                ((MainActivity)getActivity()).replaceFragment(new profileFragment(recipe.author));
+                ((MainActivity) getActivity()).replaceFragment(new profileFragment(recipe.author));
             }
         });
 
         modifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)getActivity()).replaceFragment(new AddRecipeFragment(recipeId));
+                ((MainActivity) getActivity()).replaceFragment(new AddRecipeFragment(recipeId));
             }
         });
         //the share is a link to the recipe using google(of course in this project didn't work)
@@ -126,15 +129,15 @@ public class InnerRecipeFragment extends Fragment {
             public void onClick(View view) {
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey, check out this recipe. https://MenuManager.com/recipeid="+recipeId);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey, check out this recipe. https://MenuManager.com/recipeid=" + recipeId);
                 sendIntent.setType("text/plain");
                 startActivity(sendIntent);
             }
         });
 
         actionFavourite = view.findViewById(R.id.action_favourite);
-        FavoriteRecipes favoriteRecipes = favoriteRecipesRepository.getRecipe(((GlobalClass)getActivity().getApplication()).getUserId(), recipeId);
-        if(favoriteRecipes == null){
+        FavoriteRecipes favoriteRecipes = favoriteRecipesRepository.getRecipe(((GlobalClass) getActivity().getApplication()).getUserId(), recipeId);
+        if (favoriteRecipes == null) {
             actionFavourite.setBackgroundResource(R.drawable.ic_baseline_save_alt_24);
         } else {
             actionFavourite.setBackgroundResource(R.drawable.ic_baseline_bookmark_remove_24);
@@ -150,13 +153,22 @@ public class InnerRecipeFragment extends Fragment {
         recipeAuthorTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity)getActivity()).replaceFragment(new profileFragment(recipe.author));
+                ((MainActivity) getActivity()).replaceFragment(new profileFragment(recipe.author));
             }
         });
-        if (recipe.photo.contains("ic_")){
+        if (recipe.photo.contains("ic_")) {
             Drawable drawable = AppCompatResources.getDrawable(getActivity().getApplicationContext(), R.drawable.ic_baseline_fastfood_24);
             recipeImageView.setImageDrawable(drawable);
-        } else {
+        }else if(recipe.photo.contains("storage")){
+            File imgFile = new  File(recipe.photo);
+
+            if(imgFile.exists()){
+
+                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                recipeImageView.setImageBitmap(myBitmap);
+
+            }
+        }else {
             Bitmap bitmap = Utilities.getImageBitmap(getActivity(), Uri.parse(recipe.photo));
             if (bitmap != null){
                 recipeImageView.setImageBitmap(bitmap);

@@ -1,15 +1,21 @@
 package com.example.android;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -31,6 +37,7 @@ import com.example.android.Database.userRepository;
 import com.example.android.ViewModel.AddViewModel;
 import com.google.android.material.button.MaterialButton;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -53,6 +60,7 @@ public class AddRecipeFragment extends Fragment {
     EditText ingredients;
     EditText guidelines;
     String recipeImage;
+    String imagePath = "";
     RecipeRepository recipeRepository;
     FavoriteRecipesRepository favoriteRecipesRepository;
     userRepository userRepository;
@@ -124,8 +132,16 @@ public class AddRecipeFragment extends Fragment {
        uploadPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                getActivity().startActivityForResult(intent, RESULT_LOAD_IMAGE);
+                try {
+                    if (ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, RESULT_LOAD_IMAGE);
+                    } else {
+                        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        getActivity().startActivityForResult(intent, RESULT_LOAD_IMAGE);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -154,6 +170,7 @@ public class AddRecipeFragment extends Fragment {
             @Override
             public void onChanged(Uri uri) {
                 recipeImageView.setImageURI(uri);
+                imagePath = getRealPathFromURI(uri, getActivity());
             }
         });
         if (recipeId != 0){
@@ -165,6 +182,15 @@ public class AddRecipeFragment extends Fragment {
             if (recipe.photo.contains("ic_")){
                 Drawable drawable = AppCompatResources.getDrawable(getActivity().getApplicationContext(), R.drawable.ic_baseline_fastfood_24);
                 recipeImageView.setImageDrawable(drawable);
+            }else if(recipe.photo.contains("storage")){
+                File imgFile = new  File(recipe.photo);
+
+                if(imgFile.exists()){
+
+                    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                    recipeImageView.setImageBitmap(myBitmap);
+
+                }
             } else {
                 Bitmap bitmap = Utilities.getImageBitmap(getActivity(), Uri.parse(recipe.photo));
                 if (bitmap != null){
@@ -185,7 +211,6 @@ public class AddRecipeFragment extends Fragment {
                     String recipreGuidelines = guidelines.getText().toString();
 
                     Bitmap bitmap = addViewModel.getImageBitmap().getValue();
-                    Uri uri = addViewModel.getImageUri().getValue();
 
 
                     if(bitmap != null){
@@ -194,8 +219,8 @@ public class AddRecipeFragment extends Fragment {
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         }
-                    } else if(uri != null){
-                        recipeImage = String.valueOf(uri);
+                    } else if(!imagePath.equals("")){
+                        recipeImage = imagePath;
                     } else {
                         recipeImage = Uri.parse("android.resource://"+R.class.getPackage().getName()+"/" +"ic_baseline_fastfood_24.xml").toString();
                     }
@@ -226,6 +251,22 @@ public class AddRecipeFragment extends Fragment {
 
         return view;
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults)
+    {
+        switch (requestCode) {
+            case RESULT_LOAD_IMAGE:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Intent galleryIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(galleryIntent, RESULT_LOAD_IMAGE);
+                } else {
+                    Toast.makeText(getActivity(), "If you don't give permission you cannot load an image", Toast.LENGTH_SHORT).show();
+                    //do something like displaying a message that he didn`t allow the app to access gallery and you wont be able to let him select from gallery
+                }
+                break;
+        }
+    }
 
     private Uri saveImage(Bitmap bitmap, Activity activity) throws FileNotFoundException {
         String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.ITALY)
@@ -252,5 +293,23 @@ public class AddRecipeFragment extends Fragment {
 
         return imageUri;
 
+    }
+
+    public String getRealPathFromURI(Uri contentURI, Activity context) {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        @SuppressWarnings("deprecation")
+        Cursor cursor = context.managedQuery(contentURI, projection, null,
+                null, null);
+        if (cursor == null)
+            return null;
+        int column_index = cursor
+                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        if (cursor.moveToFirst()) {
+            String s = cursor.getString(column_index);
+            // cursor.close();
+            return s;
+        }
+        // cursor.close();
+        return null;
     }
 }

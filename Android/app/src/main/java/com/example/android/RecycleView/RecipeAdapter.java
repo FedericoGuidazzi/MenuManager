@@ -2,6 +2,7 @@ package com.example.android.RecycleView;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
@@ -29,6 +30,7 @@ import com.example.android.UpdateItemShoppingList;
 import com.example.android.Utilities;
 import com.google.android.material.card.MaterialCardView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -78,10 +80,19 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
         String photo = itemList.get(position).getPhoto();
         holder.recipeName.setText(name);
         holder.recipeId.setText(""+itemList.get(position).getRecipeId());
-        //holder.imageView.setImageURI(Uri.parse(photo));
+
         if (photo.contains("ic_")){
             Drawable drawable = AppCompatResources.getDrawable(fragment.getActivity().getApplicationContext(), R.drawable.ic_baseline_fastfood_24);
             holder.imageView.setImageDrawable(drawable);
+        }else if(photo.contains("storage")){
+            File imgFile = new  File(photo);
+
+            if(imgFile.exists()){
+
+                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                holder.imageView.setImageBitmap(myBitmap);
+
+            }
         } else {
             Bitmap bitmap = Utilities.getImageBitmap(fragment.getActivity(), Uri.parse(photo));
             if (bitmap != null){
