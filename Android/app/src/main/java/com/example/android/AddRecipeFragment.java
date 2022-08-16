@@ -65,7 +65,7 @@ public class AddRecipeFragment extends Fragment {
     FavoriteRecipesRepository favoriteRecipesRepository;
     userRepository userRepository;
     ImageView recipeImageView;
-    private int recipeId = 0;
+    private int recipeId = -1;
     public final static int RESULT_LOAD_IMAGE = 2;
     public final static int REQUEST_IMAGE_CAPTURE = 3;
 
@@ -224,7 +224,7 @@ public class AddRecipeFragment extends Fragment {
                     } else {
                         recipeImage = Uri.parse("android.resource://"+R.class.getPackage().getName()+"/" +"ic_baseline_fastfood_24.xml").toString();
                     }
-                    if(recipeId == 0){
+                    if(recipeId == -1){
                         Recipe recipe = new Recipe(recipeTitle, recipeDescription, recipeIngredients,
                                 ((GlobalClass)getActivity().getApplication()).getUserId(), recipeImage, recipreGuidelines);
                         recipeRepository.addRecipe(recipe);
@@ -238,6 +238,10 @@ public class AddRecipeFragment extends Fragment {
                         Toast.makeText(getActivity(), "Your recipe has been added successfully", Toast.LENGTH_SHORT).show();
                         ((MainActivity)getActivity()).replaceFragment(new recipesFragment());
                     } else {
+                        if(recipeImage == "android.resource://com.example.android/ic_baseline_fastfood_24.xml"){
+                            Recipe recipe = recipeRepository.getRecipe(recipeId);
+                            recipeImage = recipe.photo;
+                        }
                         favoriteRecipesRepository.uploadRecipe(recipeTitle, recipeDescription, recipeIngredients, recipreGuidelines, recipeImage, recipeId);
                         recipeRepository.uploadRecipe(recipeTitle, recipeDescription, recipeIngredients, recipreGuidelines, recipeImage, recipeId);
                         Toast.makeText(getActivity(), "Your recipe has been updated successfully", Toast.LENGTH_SHORT).show();
