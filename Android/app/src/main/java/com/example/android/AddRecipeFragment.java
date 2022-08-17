@@ -65,6 +65,7 @@ public class AddRecipeFragment extends Fragment {
     FavoriteRecipesRepository favoriteRecipesRepository;
     userRepository userRepository;
     ImageView recipeImageView;
+    AddViewModel addViewModel;
     private int recipeId = -1;
     public final static int RESULT_LOAD_IMAGE = 2;
     public final static int REQUEST_IMAGE_CAPTURE = 3;
@@ -155,8 +156,9 @@ public class AddRecipeFragment extends Fragment {
             }
         });
 
-        AddViewModel addViewModel = new ViewModelProvider((ViewModelStoreOwner) getActivity()).get(AddViewModel.class);
-
+        addViewModel = new ViewModelProvider((ViewModelStoreOwner) getActivity()).get(AddViewModel.class);
+        addViewModel.clearLiveData();
+        Log.e("view model", addViewModel.getImageUri().getValue()!=null?addViewModel.getImageUri().getValue().toString():"");
         addViewModel.getImageBitmap().observe(getViewLifecycleOwner(), new Observer<Bitmap>() {
             //code to visualize image if is taken
             @Override
@@ -173,7 +175,7 @@ public class AddRecipeFragment extends Fragment {
                 imagePath = getRealPathFromURI(uri, getActivity());
             }
         });
-        if (recipeId != 0){
+        if (recipeId != -1){
             Recipe recipe = recipeRepository.getRecipe(recipeId);
             title.setText(recipe.title);
             description.setText(recipe.description);
@@ -228,9 +230,9 @@ public class AddRecipeFragment extends Fragment {
                         Recipe recipe = new Recipe(recipeTitle, recipeDescription, recipeIngredients,
                                 ((GlobalClass)getActivity().getApplication()).getUserId(), recipeImage, recipreGuidelines);
                         recipeRepository.addRecipe(recipe);
-                        int id = recipeRepository.newId();
+                        int id = recipeRepository.newId()+1;
                         FavoriteRecipes favoriteRecipes = new FavoriteRecipes(recipe.title, recipe.description,
-                                recipe.ingredients, recipe.author, recipe.photo, recipe.guidelines, id+1, ((GlobalClass)getActivity().getApplication()).getUserId());
+                                recipe.ingredients, recipe.author, recipe.photo, recipe.guidelines, id, ((GlobalClass)getActivity().getApplication()).getUserId());
                         favoriteRecipesRepository.insertFavoriteRecipe(favoriteRecipes);
 
                         //add points to the recipe author

@@ -91,7 +91,7 @@ public class InnerRecipeFragment extends Fragment {
         favoriteRecipesRepository = new FavoriteRecipesRepository(getActivity().getApplication());
         recipeRepository = new RecipeRepository(getActivity().getApplication());
         userRepository = new userRepository(getActivity().getApplication());
-        recipe = recipeRepository.getRecipe(recipeId);
+
     }
 
     @Override
@@ -99,6 +99,7 @@ public class InnerRecipeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_inner_recipe, container, false);
+        recipe = recipeRepository.getRecipe(recipeId);
         recipeNameTextView = view.findViewById(R.id.recipe_name);
         shareButton = view.findViewById(R.id.share_button);
         deleteButton = view.findViewById(R.id.delete_button);

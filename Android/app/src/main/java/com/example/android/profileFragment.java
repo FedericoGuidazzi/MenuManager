@@ -157,7 +157,7 @@ public class profileFragment extends Fragment {
         rankText.setText(""+userRank+" out of "+listUserRank.size());
 
         AddViewModel addViewModel = new ViewModelProvider((ViewModelStoreOwner) getActivity()).get(AddViewModel.class);
-
+        addViewModel.clearLiveData();
         buttonUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

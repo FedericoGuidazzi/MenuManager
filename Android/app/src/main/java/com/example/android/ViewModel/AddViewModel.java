@@ -14,9 +14,9 @@ import com.example.android.Recipe;
 
 public class AddViewModel extends AndroidViewModel {
 
-    private final MutableLiveData<Bitmap> imageBitmap = new MutableLiveData<>();
+    private MutableLiveData<Bitmap> imageBitmap = new MutableLiveData<>();
 
-    private final MutableLiveData<Uri> imageUri = new MutableLiveData<>();
+    private MutableLiveData<Uri> imageUri = new MutableLiveData<>();
 
     private final RecipeRepository repository;
 
@@ -38,6 +38,11 @@ public class AddViewModel extends AndroidViewModel {
     }
 
     public MutableLiveData<Uri> getImageUri(){ return imageUri;}
+
+    public void clearLiveData(){
+        imageBitmap = new MutableLiveData<>();
+        imageUri = new MutableLiveData<>();
+    }
 
     public void insertRecipe(Recipe recipe){ repository.addRecipe(recipe); }
 

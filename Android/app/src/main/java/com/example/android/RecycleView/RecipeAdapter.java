@@ -60,6 +60,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.MyViewHold
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Log.e("id", recipeId.getText().toString() );
                     ((MainActivity)fragment.getActivity()).replaceFragment(new InnerRecipeFragment(Integer.parseInt(recipeId.getText().toString())));
                 }
             });

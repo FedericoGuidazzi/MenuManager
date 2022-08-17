@@ -1,5 +1,6 @@
 package com.example.android;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -61,4 +62,5 @@ public class Recipe {
     }
 
     public String getGuidelines(){ return guidelines;}
+
 }
